@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<style>
+    /* Estilos CSS aquí */
+    #WebGL-output {
+        
+        z-index: 1;
+    }
+</style>
+
+<head>
+    <title>Metaverse</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="./libs/jquery.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="scrpits/sidebarMenu.js"></script>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./libs/three.module.js"
+            }
+        }
+    </script>
+
+  <script type="module" src="./MyScene.js"></script>    
+    
+</head>
+
+ 
+<body>
+
+
+
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large"
+    onclick="closeSidebar()">Close &times;</button>
+
+    <!-- Menú desplegable-->
+     <div id="menuCategories"></div>
+  </div>
+  
+  <div id="main">
+  
+  <div class="w3-teal front" id="topBar">
+    <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="openSidebar()">&#9776;</button>
+  </div>
+  
+  
+  <div class="w3-container front">
+    <div class="slidecontainer zone">
+        <input type="range" min="-180" max="180" step ="1" value="0" class="slider" id="myRange" style="display:none">
+    </div>
+    <div>
+      <button class = "zone" id="copy" style="display:none" >Frame</button>
+  </div>
+                       
+    <div>
+        <button class = "zone" id="delete" style="display:none" >delete</button>
+    </div>
+
+    <div>
+        <button class = "zone" id="POV">POV</button>
+    </div>
+  </div>
+  
+
+  <div id="joystick-container" class="front" style="display:block;">
+    <div id="joystick"></div>
+    <input id="coordinateX" value = "0" style="display: none;"></input>
+    <input id="coordinateZ" value = "0" style="display: none;"></input>
+  </div>
+
+
+  
+  <div id="WebGL-output"></div>
+</body>
+
+</html>

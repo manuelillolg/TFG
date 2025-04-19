@@ -1,0 +1,102 @@
+  function openSidebar() {
+    loadCategories()
+    document.getElementById("main").style.marginLeft = "25%";
+    document.getElementById("mySidebar").style.width = "25%";
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("openNav").style.display = 'none';
+  }
+  
+  function closeSidebar() {
+    document.getElementById("main").style.marginLeft = "0%";
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("openNav").style.display = "inline-block";
+  } 
+
+  function loadCategories() {
+    // Realiza la petición al servidor para obtener las categorías
+    fetch('http://localhost:3000/getCategories')
+        .then(response => response.json())
+        .then(data => {
+            // Selecciona el contenedor donde se insertarán los menús
+            const menuContainer = document.getElementById('menuCategories');
+            
+            // Limpiamos el contenedor por si acaso
+            menuContainer.innerHTML = '';
+
+            // Itera sobre las categorías devueltas por la petición
+            data.categories.forEach((category, index) => {
+                // Crear un botón para cada categoría
+                const button = document.createElement('button');
+                button.classList.add('w3-button', 'w3-block', 'w3-left-align');
+                button.innerHTML = `${category} &#9660;`;  // Asigna el nombre de la categoría
+                button.setAttribute('onclick', `toggleDropdown('menu${index + 1}', '${category}')`);
+                
+                // Crear un menú para cada categoría
+                const menu = document.createElement('div');
+                menu.id = `menu${index + 1}`;
+                menu.classList.add('w3-hide', 'w3-bar-block');
+                
+                // Añadir el botón y el menú al contenedor
+                menuContainer.appendChild(button);
+                menuContainer.appendChild(menu);
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener las categorías:', error);
+        });
+}
+
+// Función para mostrar/ocultar el menú y cargar subdirectorios
+function toggleDropdown(menuId, category) {
+  const menu = document.getElementById(menuId);
+  
+  // Si el menú está oculto, lo mostramos y cargamos su contenido
+  if (menu.classList.contains('w3-hide')) {
+      // Mostrar el menú
+      menu.classList.remove('w3-hide');
+
+      // Limpiamos el menú antes de llenarlo con subdirectorios
+      menu.innerHTML = '';
+
+      // Realizar una solicitud para obtener los subdirectorios de la categoría
+      fetch(`http://localhost:3000/getSubdirectories/${category}`)
+          .then(response => response.json())
+          .then(data => {
+              // Iterar sobre los subdirectorios y añadir enlaces al menú
+              data.subdirectories.forEach(subdir => {
+                  const option = document.createElement('a');
+                  option.href = "#";
+                  option.classList.add('w3-bar-item', 'w3-button');
+                  option.textContent = subdir;
+
+                  // Establecer un manejador de clics para abrir una nueva ventana con la ruta
+                  option.onclick = () => {
+                    const url = `http://localhost:8080/models/${category}/${subdir}`;
+                    window.open(url, 'popupWindow', 'width=800,height=600,scrollbars=yes,resizable=yes'); // Abre en una ventana emergente
+                  };
+
+                  // Crear un botón "+"
+                  const plusButton = document.createElement('button');
+                  plusButton.textContent = "+";
+                  plusButton.style.marginLeft = '10px'; // Añadir un poco de espacio entre el texto y el botón
+                  plusButton.onclick = (e) => {
+                      e.stopPropagation(); // Evitar que el click en el botón dispare el click del enlace
+                      addObject(subdir); // Invocar la función addObject
+                      closeSidebar();
+                  };
+
+                  // Añadir el botón "+" al final del enlace
+                  option.appendChild(plusButton);
+
+
+                  menu.appendChild(option);
+              });
+          })
+          .catch(error => {
+              console.error(`Error al obtener subdirectorios de ${category}:`, error);
+          });
+  } else {
+      // Si ya está visible, lo ocultamos
+      menu.classList.add('w3-hide');
+  }
+}
