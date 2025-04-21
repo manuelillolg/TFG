@@ -453,7 +453,7 @@ resetJoystick() {
     // La luz ambiental solo tiene un color y una intensidad
     // Se declara como   var   y va a ser una variable local a este método
     //    se hace así puesto que no va a ser accedida desde otros métodos
-    var ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     // La añadimos a la escena
     this.add (ambientLight);
     
@@ -462,7 +462,7 @@ resetJoystick() {
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     this.spotLight = new THREE.SpotLight( 0xffffff, 1);
-    this.spotLight.position.set( 0, 60, 400 );
+    this.spotLight.position.set( 0, 40000, 0 );
     this.add (this.spotLight);
   }
   

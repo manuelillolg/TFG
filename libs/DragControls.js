@@ -1,13 +1,13 @@
 
 import {
-	Controls,
 	Matrix4,
 	Plane,
 	Raycaster,
 	Vector2,
 	Vector3,
 	MOUSE,
-	TOUCH
+	TOUCH,
+	EventDispatcher
 } from './three.module.js';
 
 const _plane = new Plane();
@@ -32,7 +32,7 @@ const STATE = {
 	ROTATE: 1
 };
 
-class DragControls extends Controls {
+class DragControls extends EventDispatcher {
 
 	constructor( objects, camera, domElement = null ) {
 

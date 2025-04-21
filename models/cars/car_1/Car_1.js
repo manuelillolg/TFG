@@ -1,6 +1,8 @@
 import { OBB } from '../../../libs/OBB.js'
 import * as THREE from '../../../libs/three.module.js'
 import * as TWEEN from '../../../libs/tween.esm.js'
+import { MTLLoader } from '../../../libs/MTLLoader.js'
+import { OBJLoader } from '../../../libs/OBJLoader.js'
 
 
 class Car_1 extends THREE.Object3D {
@@ -12,31 +14,31 @@ class Car_1 extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const buildingGeometry = new THREE.BoxGeometry( 200, 200, 200); 
-    // Cargar la textura
-    const textureLoader = new THREE.TextureLoader();
-    const alzado = textureLoader.load('./imgs/alzado.jpg');
-    const perfil = textureLoader.load('./imgs/perfil.jpg');
-    perfil.wrapS = THREE.RepeatWrapping;
-    perfil.wrapT = THREE.RepeatWrapping;
+    // const buildingGeometry = new THREE.BoxGeometry( 400, 250, 1000); 
+    // // Cargar la textura
+    // const textureLoader = new THREE.TextureLoader();
+    // const alzado = textureLoader.load('./imgs/alzado.jpg');
+    // const perfil = textureLoader.load('./imgs/perfil.jpg');
+    // perfil.wrapS = THREE.RepeatWrapping;
+    // perfil.wrapT = THREE.RepeatWrapping;
 
-    perfil.repeat.set(2,1)
+    // perfil.repeat.set(2,1)
 
-    // Crear materiales para cada cara
-    const buildingMaterial = [
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }),    // Frente con textura
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa })  // Parte trasera
-    ];
-    const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
+    // // Crear materiales para cada cara
+    // const buildingMaterial = [
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral izquierda
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral derecha
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }),    // Frente con textura
+    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa })  // Parte trasera
+    // ];
+    // const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(200, 200, 200);
+    const geometry = new THREE.BoxGeometry(400, 260, 900);
     geometry.computeBoundingBox()
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false }); // Material sólido
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);
 
     this.visibleBBox.geometry.userData.obb = new OBB().fromBox3(
@@ -44,7 +46,7 @@ class Car_1 extends THREE.Object3D {
     )
 
     this.visibleBBox.userData.obb = new OBB()
-    this.visibleBBox.position.set(0,200/2+1.1,0);
+    this.visibleBBox.position.set(0,260/2+1.5,0);
 
     this.bbox = new THREE.Box3().setFromObject(this.visibleBBox,true);
     this.bboxHelper = new THREE.Box3Helper(this.bbox,0xff0000);
@@ -53,9 +55,30 @@ class Car_1 extends THREE.Object3D {
     this.name = 'car_1'
     this.objectSelected = false;
 
-    cube.position.set(0,200/2+1.1,0);
-    this.add(cube); 
+    // cube.position.set(0,250/2+1.1,0);
+    // this.add(cube); 
     this.update();
+    this.cargarModelo();
+  }
+  cargarModelo() {
+    const ruta = './obj/'; // por ejemplo: 'assets/models/coche/'
+
+    const mtlLoader = new MTLLoader();
+    mtlLoader.setPath(ruta);
+    mtlLoader.load('911.mtl', (materials) => {
+      materials.preload();
+
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath(ruta);
+      objLoader.load('Porsche_911_GT2.obj', (obj) => {
+        obj.position.set(0,125.1,0);
+        obj.scale.set(200, 200, 200); // Doble de tamaño en todos los ejes
+        this.obj = obj; // 🔹 lo guardas como propiedad de la clase
+        this.add(this.obj)
+         // lo añades a este Object3D
+      });
+    });
   }
   
   getBBoxPosition(){
@@ -82,20 +105,20 @@ class Car_1 extends THREE.Object3D {
   addFrame(scene){
     const mainMesh = this.children.find(child => child.isMesh);
 
-    if (mainMesh) {
-      const clone = mainMesh.clone();
+    if (this.obj) {
+      const clone = this.obj.clone();
       console.log(clone.position)
 
       // Posición y rotación en el mundo
       const worldPos = new THREE.Vector3();
       const worldQuat = new THREE.Quaternion();
       this.updateMatrixWorld(true); // fuerza la actualización de la jerarquía
-      mainMesh.updateMatrixWorld(true);
+      this.obj.updateMatrixWorld(true);
 
-      mainMesh.getWorldPosition(worldPos);
-      mainMesh.getWorldQuaternion(worldQuat);
+      this.obj.getWorldPosition(worldPos);
+      this.obj.getWorldQuaternion(worldQuat);
 
-      const offset = new THREE.Vector3(0, -200 / 2-1.1, 0);
+      const offset = new THREE.Vector3(0, -105, 0);
       offset.applyQuaternion(worldQuat); // girar el offset si el objeto está rotado
       worldPos.add(offset); // ajustar la posición final
 
