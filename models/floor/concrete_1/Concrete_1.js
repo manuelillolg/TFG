@@ -8,7 +8,7 @@ class Concrete_1 extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const concreteGeometry = new THREE.BoxGeometry( 700, 1, 350); 
+    const concreteGeometry = new THREE.BoxGeometry( 800, 10, 800); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
     const textura = textureLoader.load('./imgs/concrete_1.jpg');
@@ -26,13 +26,13 @@ class Concrete_1 extends THREE.Object3D {
     textura.wrapS = THREE.RepeatWrapping;
     textura.wrapT = THREE.RepeatWrapping;
 
-    textura.repeat.set(3,2)
+    textura.repeat.set(4,4)
     const cube = new THREE.Mesh( concreteGeometry, concreteMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(700, 1, 350);
+    const geometry = new THREE.BoxGeometry(800, 10, 800);
     geometry.computeBoundingBox()
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false }); // Material sólido
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false , transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);
 
     this.visibleBBox.geometry.userData.obb = new OBB().fromBox3(
@@ -40,7 +40,7 @@ class Concrete_1 extends THREE.Object3D {
     )
 
     this.visibleBBox.userData.obb = new OBB()
-    this.visibleBBox.position.set(0,1/2,0);
+    this.visibleBBox.position.set(0,-4,0);
 
     this.bbox = new THREE.Box3().setFromObject(this.visibleBBox,true);
     this.bboxHelper = new THREE.Box3Helper(this.bbox,0xff0000);
@@ -49,7 +49,7 @@ class Concrete_1 extends THREE.Object3D {
     this.name = 'concrete_1'
     this.objectSelected = false;
 
-    cube.position.set(0,1/2,0);
+    cube.position.set(0,-4,0);
     this.add(cube); 
     this.update();
   }

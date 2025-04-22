@@ -11,6 +11,7 @@ class Car_1 extends THREE.Object3D {
     super();
     this.frames = [];
     this.activeTweens = [];
+    this.duration = 1000
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
@@ -146,9 +147,11 @@ class Car_1 extends THREE.Object3D {
     }
   }
 
-  animateThroughFrames(duration = 700) {
+  animateThroughFrames() {
     console.log("Entra");
     if (this.frames.length < 2) return;
+
+    const stepDuration = this.duration / (this.frames.length - 1)
   
     const object = this;
     this.activeTweens = []; // Limpiar animaciones previas
@@ -171,18 +174,18 @@ class Car_1 extends THREE.Object3D {
       console.log("Tween hacia:", targetPos);
   
       const posTween = new TWEEN.Tween(object.position)
-        .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, duration)
+        .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, stepDuration)
         .easing(TWEEN.Easing.Quadratic.InOut);
   
       const quatObj = { t: 0 };
       const quatTween = new TWEEN.Tween(quatObj)
-        .to({ t: 1 }, duration)
+        .to({ t: 1 }, stepDuration)
         .onUpdate(() => {
           object.quaternion.slerp(targetQuat, quatObj.t);
         });
   
       const combinedTween = new TWEEN.Tween()
-        .to({}, duration)
+        .to({}, stepDuration)
         .onStart(() => {
           posTween.start();
           quatTween.start();

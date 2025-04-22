@@ -6,7 +6,7 @@ import { GUI } from '../../../libs/dat.gui.module.js'
 import { TrackballControls } from '../../../libs/TrackballControls.js'
 
 // Clases de mi proyecto
-import {Building_1} from './Building_1.js'
+import {Building_3} from './Building_3.js'
 
  
 /// La clase fachada del modelo
@@ -45,7 +45,8 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new Building_1();
+    this.model = new Building_3();
+    this.model.position.set(0,-1500,0);
     this.add (this.model);
 
   }
@@ -55,9 +56,9 @@ class MyScene extends THREE.Scene {
     //   El ángulo del campo de visión vértical en grados sexagesimales
     //   La razón de aspecto ancho/alto
     //   Los planos de recorte cercano y lejano
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 3, 400);
+    this.camera.position.set (0, 9000, 400);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
