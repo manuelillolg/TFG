@@ -1,12 +1,10 @@
-
 .front {
     z-index: 10;
 }
 
-#POV{
+#POV {
     position: relative;
-    right: 10px; 
-    
+    right: 10px;
 }
 
 #infoText {
@@ -21,7 +19,7 @@
     height: 150px;
     position: fixed; /* Cambiado a 'fixed' para posicionar relativo a la ventana */
     bottom: 10px; /* Ajusta la distancia desde el borde inferior */
-    right: 10px;  
+    right: 10px;
     border-radius: 50%;
     border: 2px solid black;
     touch-action: none; /* Importante para prevenir comportamiento táctil predeterminado */
@@ -31,7 +29,12 @@
     position: fixed;
     width: 100%;
     display: flex;
-    justify-content: space-between; /* Opcional: Espacio uniforme entre zonas */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    /* Hace que los hijos igualen la altura del más alto */
+
 }
 
 .zone {
@@ -48,4 +51,91 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+/* Ajustes de la toolbar */
+.toolbar {
+    /* position: fixed; */
+    width :100%;
+    display: flex;
+    flex-direction: row; /* Mantiene la disposición vertical */
+    gap: 1rem; /* Espacio entre los elementos dentro de toolbar */
+    height: auto;           /* ✨ Asegura que crece con el contenido */
+    align-items: center;
+  
+}
+
+#rotationSliderContainer {
+    display: flex;
+    flex-direction: column;  /* Deja el label encima del slider */
+    gap: 1rem;
+    width: 100%;
+}
+
+.slidecontainer {
+    display: flex;
+    flex-direction: column;  /* Mantiene el label sobre el slider */
+    gap: 0.5rem;  /* Espacio entre el label y el slider */
+    width: 100%;
+    margin-top: 1rem;
+    padding: 10px;
+}
+
+.durationContainer {
+    display: flex;
+    flex-direction: column;  /* Mantiene el label sobre el slider */
+    gap: 0.5rem;  /* Espacio entre el label y el slider */
+    margin-top: 1rem;
+    padding: 10px;
+    height:100%;
+}
+
+
+/* Estilo para el slider */
+.slider {
+    width: 100%; /* Hace que el slider ocupe todo el ancho disponible */
+    max-width: 300px; /* Limita el tamaño máximo para evitar que se estire demasiado */
+}
+
+/* Estilo para el botón delete */
+#delete {
+    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
+    margin-left: auto;
+    padding: 10px;
+    background-color: #f44336; /* Color de fondo */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 150px; /* Limita el tamaño máximo del botón */
+    height: 70%
+}
+
+#copy {
+    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
+    /* margin-left: auto; */
+    padding: 10px;
+    background-color: #f44336; /* Color de fondo */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 150px; /* Limita el tamaño máximo del botón */
+    height: 70%
+}
+
+#POV {
+    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
+    /* margin-left: auto; */
+    padding: 10px;
+    background-color: #f44336; /* Color de fondo */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 150px; /* Limita el tamaño máximo del botón */
+    height: 70%
 }

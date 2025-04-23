@@ -35,7 +35,7 @@
 
 
 
-<div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
     <button class="w3-bar-item w3-button w3-large"
     onclick="closeSidebar()">Close &times;</button>
 
@@ -51,21 +51,25 @@
   
   
   <div class="w3-container front">
-    <div class="slidecontainer zone">
-        <input type="range" min="-180" max="180" step ="1" value="0" class="slider" id="myRange" style="display:none">
-    </div>
-    <div>
-      <button class = "zone" id="copy" style="display:none" >Frame</button>
-  </div>
-  <div id="duration" style="display:none">
-    <label for="durationInput">Duración total (ms):</label>
-    <input type="number" id="durationInput" min="100" step="100" value="2000">
-  </div>
-                       
-    <div>
-        <button class = "zone" id="delete" style="display:none" >delete</button>
+
+    <div id="commonBlock" class="toolbar" style="display:none" > 
+      <div class="slidecontainer" id="rotationSlider">
+          <label for="myRange">Rotación del objeto:</label>
+          <input type="range" min="-180" max="180" step ="1" value="0" class="slider" id="myRange" >
+      </div>
+
+      <button id="delete" >delete</button>
     </div>
 
+    <div id="duration" class="toolbar" style="display:none">
+      <div class="durationContainer"> 
+       <label for="durationInput">Duración total (ms):</label>
+        <input type="number" id="durationInput" min="100" step="100" value="2000">
+      </div>
+
+      <button id="copy"  >Frame</button>
+    </div>
+ 
     <div>
         <button class = "zone" id="POV">POV</button>
     </div>

@@ -76,6 +76,8 @@ class MyScene extends THREE.Scene {
     this.raycaster = new THREE.Raycaster();
 
     this.pickableObjects = this.getPickableObjects();
+    
+    this.commonBlock = document.getElementById("commonBlock");
 
     this.slider = document.getElementById("myRange");
     this.slider.oninput = () => this.rotateObjectSelected();
@@ -551,20 +553,24 @@ class MyScene extends THREE.Scene {
 
   configureEditMode() {
     if (this.objectSelected === null) {
-      this.POVButton.style.display = 'block';
-      this.slider.style.display = 'none';
-      this.deleteButton.style.display = 'none';
-      this.addCopyButton.style.display = 'none';
+      this.POVButton.style.display = 'flex';
+      // this.slider.style.display = 'none';
+      // this.deleteButton.style.display = 'none';
+      // this.addCopyButton.style.display = 'none';
+      this.commonBlock.style.display='none';
       this.animationBlock.style.display = 'none';
 
     } else {
       this.POVButton.style.display = 'none';
-      this.slider.style.display = 'block';
-      this.deleteButton.style.display = 'block';
+      // this.slider.style.display = 'block';
+      this.slider.value = THREE.MathUtils.radToDeg(this.objectSelected.rotation.y);
+
+      // this.deleteButton.style.display = 'block';
+      this.commonBlock.style.display='flex';
 
       if (this.objectSelected.name == "car_1") {
-        this.addCopyButton.style.display = 'block';
-        this.animationBlock.style.display = 'block';
+        // this.addCopyButton.style.display = 'block';
+        this.animationBlock.style.display = 'flex';
         this.durationInput.value = this.objectSelected.duration;
       }
     }

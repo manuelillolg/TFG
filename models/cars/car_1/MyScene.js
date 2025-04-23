@@ -6,7 +6,7 @@ import { GUI } from '../../../libs/dat.gui.module.js'
 import { TrackballControls } from '../../../libs/TrackballControls.js'
 
 // Clases de mi proyecto
-import {Building_1} from './Building_1.js'
+import {Car_1} from './Car_1.js'
 
  
 /// La clase fachada del modelo
@@ -45,7 +45,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new Building_1();
+    this.model = new Car_1();
     this.add (this.model);
 
   }
@@ -55,9 +55,9 @@ class MyScene extends THREE.Scene {
     //   El ángulo del campo de visión vértical en grados sexagesimales
     //   La razón de aspecto ancho/alto
     //   Los planos de recorte cercano y lejano
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 3, 400);
+    this.camera.position.set (0, 0, -2000);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
@@ -91,7 +91,7 @@ class MyScene extends THREE.Scene {
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     this.spotLight = new THREE.SpotLight( 0xffffff,1 );
-    this.spotLight.position.set( 0, 60, 400 );
+    this.spotLight.position.set( 0, 1000, 0 );
     this.add (this.spotLight);
   }
   
@@ -172,10 +172,6 @@ $(function () {
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
-  window.addEventListener("click",(event)=>{
-    scene.pick(event);
-  });
-  
   // Que no se nos olvide, la primera visualización.
   scene.update();
 });
