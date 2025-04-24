@@ -12,6 +12,8 @@ class Car_1 extends THREE.Object3D {
     this.frames = [];
     this.activeTweens = [];
     this.duration = 1000
+    this.repetitions = 1; 
+    this.loop = false
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
@@ -150,11 +152,13 @@ class Car_1 extends THREE.Object3D {
   animateThroughFrames() {
     console.log("Entra");
     if (this.frames.length < 2) return;
-
-    const stepDuration = this.duration / (this.frames.length - 1)
   
+    const stepDuration = this.duration / (this.frames.length - 1);
     const object = this;
     this.activeTweens = []; // Limpiar animaciones previas
+  
+    let currentRepetition = 0;
+    let currentIndex = 0;
   
     const createTweenForFrame = (i, onCompleteCallback) => {
       const target = this.frames[i];
@@ -167,7 +171,6 @@ class Car_1 extends THREE.Object3D {
   
       // Convertir a espacio local del padre del objeto animado
       const targetPos = object.parent.worldToLocal(worldPos.clone());
-  
       const parentQuat = object.parent.getWorldQuaternion(new THREE.Quaternion());
       const targetQuat = worldQuat.clone().premultiply(parentQuat.invert());
   
@@ -196,19 +199,26 @@ class Car_1 extends THREE.Object3D {
       return combinedTween;
     };
   
-    let currentIndex = 0;
-  
     const loop = () => {
       const tween = createTweenForFrame(currentIndex, () => {
-        currentIndex = (currentIndex + 1) % this.frames.length;
-        loop(); // Llama al siguiente
+        currentIndex++;
+        if (currentIndex >= this.frames.length) {
+          currentIndex = 0;
+          currentRepetition++;
+          if (!this.loop && currentRepetition >= this.repetitions) {
+            console.log("Animación completada.");
+            return; // No más repeticiones
+          }
+        }
+        loop(); // Continuar con el siguiente frame
       });
       tween.start();
     };
   
-    this.stopAnimation(); // Por si acaso
+    this.stopAnimation(); // Detener cualquier animación previa
     loop();
   }
+  
   
   
   stopAnimation() {

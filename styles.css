@@ -26,10 +26,10 @@
 }
 
 .w3-container {
-    position: fixed;
+    
     width: 100%;
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
+    justify-content: flex-start; /* Centra horizontalmente */
     align-items: center;
     box-sizing: border-box;
     flex-direction: column;
@@ -62,7 +62,22 @@
     gap: 1rem; /* Espacio entre los elementos dentro de toolbar */
     height: auto;           /* ✨ Asegura que crece con el contenido */
     align-items: center;
+
   
+}
+
+.toolbarAnimation {
+    position: fixed;
+    left: 0; /* Lo pone a la izquierda de la pantalla */
+    top: 0;  /* Puedes ajustar este valor si quieres que no esté pegado al borde superior */
+    
+    display: flex;
+    flex-direction: row; /* Mantiene la disposición horizontal */
+    gap: 1rem; /* Espacio entre los elementos dentro de la toolbar */
+    height: auto; /* ✨ Asegura que crece con el contenido */
+    align-items: center;
+    margin-top: 5rem;
+    margin-left: 1.5rem;
 }
 
 #rotationSliderContainer {
@@ -73,19 +88,23 @@
 }
 
 .slidecontainer {
+    position:fixed;
     display: flex;
     flex-direction: column;  /* Mantiene el label sobre el slider */
     gap: 0.5rem;  /* Espacio entre el label y el slider */
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 5rem;
     padding: 10px;
 }
 
 .durationContainer {
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
     display: flex;
+    justify-content:center ;
     flex-direction: column;  /* Mantiene el label sobre el slider */
     gap: 0.5rem;  /* Espacio entre el label y el slider */
-    margin-top: 1rem;
+    margin-top: 0rem;
     padding: 10px;
     height:100%;
 }
@@ -99,43 +118,52 @@
 
 /* Estilo para el botón delete */
 #delete {
-    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    
+    margin-top: 0; /* Ya no necesitas margin-top porque usamos top */
     margin-left: auto;
     padding: 10px;
-    background-color: #f44336; /* Color de fondo */
+    background-color: #f44336;
     color: white;
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    max-width: 150px; /* Limita el tamaño máximo del botón */
-    height: 70%
-}
-
+    max-width: 150px;
+    border-radius: 15px;
+    height: auto; /* Ajusta la altura automáticamente */
+    /* z-index: 1000; Opcional: para asegurarte de que esté por encima de otros elementos */
+  }
+  
 #copy {
-    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
     /* margin-left: auto; */
     padding: 10px;
-    background-color: #f44336; /* Color de fondo */
-    color: white;
+    background-color: rgb(255, 255, 255,0.6)
+    ; /* Color de fondo */
+    color: rgb(0, 0, 0);
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
     max-width: 150px; /* Limita el tamaño máximo del botón */
-    height: 70%
+    height: 70%;
+    border-radius: 15px;
 }
 
 #POV {
-    margin-top: 1rem; /* Ajusta el espacio entre el slider y el botón */
-    /* margin-left: auto; */
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
     padding: 10px;
-    background-color: #f44336; /* Color de fondo */
-    color: white;
+    background-color: rgb(255, 255, 255,0.6); /* Color de fondo */
+    color: black;
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
     max-width: 150px; /* Limita el tamaño máximo del botón */
-    height: 70%
+    height: auto;
+    border-radius: 15px;
 }

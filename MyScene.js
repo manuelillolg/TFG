@@ -96,6 +96,17 @@ class MyScene extends THREE.Scene {
       this.objectSelected.duration = newDuration;
     });
 
+    this.repetitionsInput = document.getElementById('repetitionsInput');
+    this.repetitionsInput.addEventListener('input', () => {
+      const newRepetitions = parseInt(durationInput.value, 10);
+      this.objectSelected.repetitions = newRepetitions;
+    });
+
+    this.loop = document.getElementById('loop');
+    this.loop.addEventListener('click', () => {
+      this.objectSelected.loop = this.loop.checked;
+    });
+
 
     this.POV = false;
     this.POVButton = document.getElementById("POV");
@@ -559,11 +570,15 @@ class MyScene extends THREE.Scene {
       // this.addCopyButton.style.display = 'none';
       this.commonBlock.style.display='none';
       this.animationBlock.style.display = 'none';
+      this.topBar.style.display = "block";
 
     } else {
       this.POVButton.style.display = 'none';
+      this.topBar.style.display = "none";
       // this.slider.style.display = 'block';
       this.slider.value = THREE.MathUtils.radToDeg(this.objectSelected.rotation.y);
+      this.loop.checked = this.objectSelected.loop;
+      this.repetitionsInput = this.objectSelected.repetitions;
 
       // this.deleteButton.style.display = 'block';
       this.commonBlock.style.display='flex';
@@ -670,6 +685,7 @@ class MyScene extends THREE.Scene {
           var building1 = new Building_1();
           this.add(building1)
           this.pickableObjects.push(building1);
+          building1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
 
           this.objectSelected = building1;
           building1.selectObject();
@@ -680,6 +696,7 @@ class MyScene extends THREE.Scene {
           console.log("Adding building...");
           var building2 = new Building_2();
           this.add(building2)
+          building2.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.pickableObjects.push(building2);
 
           this.objectSelected = building2;
@@ -690,6 +707,7 @@ class MyScene extends THREE.Scene {
         case "building_3":
           console.log("Adding building...");
           var building3 = new Building_3();
+          building3.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(building3)
           this.pickableObjects.push(building3);
 
@@ -702,6 +720,7 @@ class MyScene extends THREE.Scene {
           console.log("Adding building...");
           var building4 = new Building_4();
           this.add(building4)
+          building4.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.pickableObjects.push(building4);
 
           this.objectSelected = building4;
@@ -714,6 +733,7 @@ class MyScene extends THREE.Scene {
           var concrete_1 = new Concrete_1();
           this.add(concrete_1)
           this.pickableObjects.push(concrete_1);
+          concrete_1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
 
           this.objectSelected = concrete_1;
           concrete_1.selectObject();
@@ -725,6 +745,7 @@ class MyScene extends THREE.Scene {
           var road_1 = new Road_1();
           this.add(road_1)
           this.pickableObjects.push(road_1);
+          road_1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
 
           this.objectSelected = road_1;
           road_1.selectObject();
@@ -733,6 +754,7 @@ class MyScene extends THREE.Scene {
         case "road_2":
           console.log("Adding building...");
           var road_2 = new Road_2();
+          road_2.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(road_2)
           this.pickableObjects.push(road_2);
 
@@ -744,6 +766,7 @@ class MyScene extends THREE.Scene {
         case "car_1":
           console.log("Adding building...");
           var car_1 = new Car_1();
+          car_1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(car_1)
           this.pickableObjects.push(car_1);
 
