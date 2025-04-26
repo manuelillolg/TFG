@@ -34,6 +34,7 @@ class MyScene extends THREE.Scene {
   constructor(myCanvas) {
     super();
 
+    this.isClick = true;
     this.isDragging = false;
     this.objectSelected = null;
     this.previousTouchX = 0;
@@ -564,7 +565,7 @@ class MyScene extends THREE.Scene {
 
   configureEditMode() {
     if (this.objectSelected === null) {
-      this.POVButton.style.display = 'flex';
+      this.POVButton.style.display = 'block';
       // this.slider.style.display = 'none';
       // this.deleteButton.style.display = 'none';
       // this.addCopyButton.style.display = 'none';
@@ -609,8 +610,9 @@ class MyScene extends THREE.Scene {
   }
 
   pick(event, rect) {
+    const e = this.getNormalizedEvent(event);
     console.log(rect)
-    var mouse = new THREE.Vector2(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+    var mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
 
     this.raycaster.setFromCamera(mouse, this.getCamera());
     var pickedObjects = this.raycaster.intersectObjects(this.pickableObjects, true);
@@ -863,17 +865,32 @@ class MyScene extends THREE.Scene {
     this.isDragging = false;
   }
 
+  getNormalizedEvent(event) {
+    if (event.touches && event.touches.length > 0) {
+      return event.touches[0];
+    } else if (event.changedTouches && event.changedTouches.length > 0) {
+      return event.changedTouches[0];
+    } else {
+      return event; // Mouse event normal
+    }
+  }
+
   onMouseStart(event) {
 
     this.isDragging = true;
-    this.previousTouchX = event.clientX;
-    this.previousTouchY = event.clientY;
+    this.isClick = true;
+    const e = this.getNormalizedEvent(event);
+    this.previousTouchX = e.clientX;
+    this.previousTouchY = e.clientY;
 
   }
 
   onMouseMove(event) {
+    this.isClick = false;
+    const e = this.getNormalizedEvent(event);
+   
     if (this.isDragging && !this.POV) {
-      const touch = event;
+      const touch = e;
       const deltaX = touch.clientX - this.previousTouchX;
       const deltaY = touch.clientY - this.previousTouchY;
 
@@ -897,7 +914,7 @@ class MyScene extends THREE.Scene {
       this.previousTouchY = touch.clientY;
       this.updateCameraOBB();
     } else if (this.isDragging && this.POV) {
-      const touch = event;
+      const touch = e;
       const deltaX = touch.clientX - this.previousTouchX;
       const deltaY = touch.clientY - this.previousTouchY;
 
@@ -928,6 +945,7 @@ $(function () {
 
   // Se instancia la escena pasándole el  div  que se ha creado en el html para visualizar
   var scene = new MyScene("#WebGL-output");
+  scene.background = new THREE.Color(0x87CEEB);
   var sceneDiv = document.getElementById("WebGL-output");
 
   var joystickContainer = document.getElementById("joystick-container")
@@ -935,13 +953,29 @@ $(function () {
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener("resize", () => scene.onWindowResize());
   sceneDiv.addEventListener("click", (event) => {
-    scene.pick(event, sceneDiv.getBoundingClientRect());
-  });
+    event.preventDefault(); 
+    if(scene.isClick){
+     scene.pick(event, sceneDiv.getBoundingClientRect());
+    }
+  },{passive:false});
 
   // window.addEventListener('joystickMove',(event)=>{scene.moveJoystick(event)});
   sceneDiv.addEventListener('mousedown', (event) => { scene.onMouseStart(event) });
   sceneDiv.addEventListener('mousemove', (event) => { scene.onMouseMove(event) });
   sceneDiv.addEventListener('mouseup', (event) => { scene.onMouseEnd(event) });
+
+  sceneDiv.addEventListener('touchstart', (event) => {
+    event.preventDefault(); 
+    scene.onMouseStart(event) 
+  },{passive:false});
+  sceneDiv.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    scene.onMouseMove(event) 
+  },{passive:false});
+  sceneDiv.addEventListener('touchend', (event) => {
+    event.preventDefault();
+    scene.onMouseEnd(event) 
+  },{passive:false});
 
   joystickContainer.addEventListener('mousedown', (event) => { scene.startDragJoystick(event) });
   document.addEventListener('mousemove', (event) => { scene.moveJoystick(event) });

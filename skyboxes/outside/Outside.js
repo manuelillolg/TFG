@@ -7,28 +7,28 @@ class Outside extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const buildingGeometry = new THREE.BoxGeometry( 1000000, 1000000, 1000000); 
+    const buildingGeometry = new THREE.BoxGeometry( 100000, 3, 100000); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
     //const alzado = textureLoader.load('./imgs/alzado.jpg');
     const cielo = textureLoader.load('./imgs/sky.jpg');
     cielo.wrapS = THREE.RepeatWrapping;
     cielo.wrapT = THREE.RepeatWrapping;
-    cielo.repeat.set(1000,1000); 
+    cielo.repeat.set(80000,80000); 
 
     const suelo = textureLoader.load('./imgs/sand-ground-textured.jpg');
     suelo.wrapS = THREE.RepeatWrapping;
     suelo.wrapT = THREE.RepeatWrapping;
-    suelo.repeat.set(6000,6000); 
+    suelo.repeat.set(600,600); 
 
     // Crear materiales para cada cara
     const buildingMaterial = [
-      new THREE.MeshBasicMaterial({ map:cielo ,side: THREE.BackSide}), // Lateral izquierda
-      new THREE.MeshBasicMaterial({ map:cielo ,side: THREE.BackSide}), // Lateral derecha
-      new THREE.MeshBasicMaterial({ map:cielo,side: THREE.BackSide }), // Parte superior
+      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral izquierda
+      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral derecha
+      new THREE.MeshBasicMaterial({ map:suelo }), // Parte superior
       new THREE.MeshBasicMaterial({ map:suelo, side: THREE.BackSide  }), // Parte inferior
-      new THREE.MeshBasicMaterial({ map:cielo ,side: THREE.BackSide}),    // Frente con textura
-      new THREE.MeshBasicMaterial({ map:cielo ,side: THREE.BackSide })  // Parte trasera
+      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}),    // Frente con textura
+      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide })  // Parte trasera
     ];
     const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
     
@@ -36,7 +36,7 @@ class Outside extends THREE.Object3D {
     this.name = 'Outside'
     this.objectSelected = false;
 
-    cube.position.set(0,1000000/2 -3,0);
+    cube.position.set(0,3/2-3 ,0);
     this.add(cube); 
     //this.update();
   }

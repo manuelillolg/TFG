@@ -1,20 +1,23 @@
+  const localhost = "192.168.1.141"  
   function openSidebar() {
     loadCategories()
     document.getElementById("main").style.marginLeft = "25%";
     document.getElementById("mySidebar").style.width = "25%";
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("openNav").style.display = 'none';
+    document.getElementById("POV").style.display= 'none';
   }
   
   function closeSidebar() {
     document.getElementById("main").style.marginLeft = "0%";
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("openNav").style.display = "inline-block";
+    document.getElementById("POV").style.display= 'block';
   } 
 
   function loadCategories() {
     // Realiza la petición al servidor para obtener las categorías
-    fetch('http://localhost:3000/getCategories')
+    fetch(`http://${localhost}:3000/getCategories`)
         .then(response => response.json())
         .then(data => {
             // Selecciona el contenedor donde se insertarán los menús
@@ -59,7 +62,7 @@ function toggleDropdown(menuId, category) {
       menu.innerHTML = '';
 
       // Realizar una solicitud para obtener los subdirectorios de la categoría
-      fetch(`http://localhost:3000/getSubdirectories/${category}`)
+      fetch(`http://${localhost}:3000/getSubdirectories/${category}`)
           .then(response => response.json())
           .then(data => {
               // Iterar sobre los subdirectorios y añadir enlaces al menú
@@ -71,7 +74,7 @@ function toggleDropdown(menuId, category) {
 
                   // Establecer un manejador de clics para abrir una nueva ventana con la ruta
                   option.onclick = () => {
-                    const url = `http://localhost:8080/models/${category}/${subdir}`;
+                    const url = `http://${localhost}:8080/models/${category}/${subdir}`;
                     window.open(url, 'popupWindow', 'width=800,height=600,scrollbars=yes,resizable=yes'); // Abre en una ventana emergente
                   };
 
@@ -83,6 +86,7 @@ function toggleDropdown(menuId, category) {
                       e.stopPropagation(); // Evitar que el click en el botón dispare el click del enlace
                       addObject(subdir); // Invocar la función addObject
                       closeSidebar();
+                      document.getElementById("POV").style.display="none";
                   };
 
                   // Añadir el botón "+" al final del enlace

@@ -18,8 +18,8 @@
     width: 150px;
     height: 150px;
     position: fixed; /* Cambiado a 'fixed' para posicionar relativo a la ventana */
-    bottom: 10px; /* Ajusta la distancia desde el borde inferior */
-    right: 10px;
+    bottom: 10%; /* Ajusta la distancia desde el borde inferior */
+    right: 10%;
     border-radius: 50%;
     border: 2px solid black;
     touch-action: none; /* Importante para prevenir comportamiento táctil predeterminado */
