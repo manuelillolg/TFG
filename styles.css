@@ -108,7 +108,13 @@
     padding: 10px;
     height:100%;
 }
-
+.centerContent{
+    display: flex;
+    flex-direction:column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
 
 /* Estilo para el slider */
 .slider {
@@ -152,6 +158,21 @@
     border-radius: 15px;
 }
 
+#removeFrames {
+    /* margin-left: auto; */
+    padding: 10px;
+    background-color: #f44336
+    ; /* Color de fondo */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 150px; /* Limita el tamaño máximo del botón */
+    height: 70%;
+    border-radius: 15px;
+}
+
 #POV {
     position: fixed;
     top: 5rem;
@@ -167,3 +188,14 @@
     height: auto;
     border-radius: 15px;
 }
+.circle {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+
+    width: 20px;
+    height: 20px;
+    background-color: green;
+    border-radius: 50%;
+
+  }

@@ -1,4 +1,11 @@
-  const localhost = "192.168.1.141"  
+  var localhost;//"192.168.1.141" //// 
+  const debug = false;
+
+  if(debug){
+    localhost = "localhost"
+  }else{
+    localhost = "192.168.1.141"
+  }
   function openSidebar() {
     loadCategories()
     document.getElementById("main").style.marginLeft = "25%";

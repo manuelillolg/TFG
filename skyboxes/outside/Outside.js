@@ -7,19 +7,19 @@ class Outside extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const buildingGeometry = new THREE.BoxGeometry( 100000, 3, 100000); 
+    const buildingGeometry = new THREE.BoxGeometry( 9000, 3, 9000); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
     //const alzado = textureLoader.load('./imgs/alzado.jpg');
     const cielo = textureLoader.load('./imgs/sky.jpg');
     cielo.wrapS = THREE.RepeatWrapping;
     cielo.wrapT = THREE.RepeatWrapping;
-    cielo.repeat.set(80000,80000); 
+    cielo.repeat.set(800000,800000); 
 
     const suelo = textureLoader.load('./imgs/sand-ground-textured.jpg');
     suelo.wrapS = THREE.RepeatWrapping;
     suelo.wrapT = THREE.RepeatWrapping;
-    suelo.repeat.set(600,600); 
+    suelo.repeat.set(3000,3000); 
 
     // Crear materiales para cada cara
     const buildingMaterial = [

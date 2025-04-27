@@ -57,7 +57,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 1500, 200);
+    this.camera.position.set (0, 15, 2);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
@@ -68,8 +68,8 @@ class MyScene extends THREE.Scene {
     
     // Se configuran las velocidades de los movimientos
     this.cameraControl.rotateSpeed = 5;
-    this.cameraControl.zoomSpeed = -2;
-    this.cameraControl.panSpeed = 0.5;
+    this.cameraControl.zoomSpeed = -0.2;
+    this.cameraControl.panSpeed = 0.05;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
   }

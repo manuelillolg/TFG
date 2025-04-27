@@ -21,8 +21,8 @@ import { Road_2 } from './models/floor/road_2/Road_2.js'
 import { Car_1 } from './models/cars/car_1/Car_1.js'
 
 
-const CENITAL_HEIGHT = 8000;
-const POV_HEIGHT = 240 - 250 / 2;
+const CENITAL_HEIGHT = 80;
+const POV_HEIGHT = (240 - 250 / 2)/100;
 /// La clase fachada del modelo
 /**
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
@@ -77,6 +77,7 @@ class MyScene extends THREE.Scene {
     this.raycaster = new THREE.Raycaster();
 
     this.pickableObjects = this.getPickableObjects();
+    this.movingObjects = [];
     
     this.commonBlock = document.getElementById("commonBlock");
 
@@ -88,6 +89,9 @@ class MyScene extends THREE.Scene {
 
     this.addCopyButton = document.getElementById("copy");
     this.addCopyButton.onclick = () => this.createFrame();
+
+    this.removeFramesButton = document.getElementById("removeFrames");
+    this.removeFramesButton.onclick = ()=> this.objectSelected.removeFrames(this);
     //Añadir la funcionalidad de on click al botón de copia 
 
     this.animationBlock = document.getElementById('duration');
@@ -98,8 +102,8 @@ class MyScene extends THREE.Scene {
     });
 
     this.repetitionsInput = document.getElementById('repetitionsInput');
-    this.repetitionsInput.addEventListener('input', () => {
-      const newRepetitions = parseInt(durationInput.value, 10);
+    repetitionsInput.addEventListener('input', () => {
+      const newRepetitions = parseInt(repetitionsInput.value, 10);
       this.objectSelected.repetitions = newRepetitions;
     });
 
@@ -195,8 +199,8 @@ class MyScene extends THREE.Scene {
       const normalizedDeltaY = -deltaY / maxDistance;
 
       // Los incrementos se ajustan a la dirección de la cámara/objeto
-      this.incrementX = right.x * normalizedDeltaX + forward.x * normalizedDeltaY;
-      this.incrementZ = right.z * normalizedDeltaX + forward.z * normalizedDeltaY;
+      this.incrementX = (right.x * normalizedDeltaX + forward.x * normalizedDeltaY)*0.02;
+      this.incrementZ = (right.z * normalizedDeltaX + forward.z * normalizedDeltaY)*0.02;
     }
   }
 
@@ -209,7 +213,6 @@ class MyScene extends THREE.Scene {
   }
 
   goToPreviousPosition() {
-    console.log("DEBUG: Nueva posición tras avanzar y chocar: ", this.POVCamera.position);
 
     // Retrocede la cámara en la dirección opuesta
     this.POVCamera.position.x = this.previousPosition.x // Retrocede en X
@@ -217,12 +220,10 @@ class MyScene extends THREE.Scene {
 
     // Actualiza el OBB después de retroceder
     this.updateCameraOBB();
-    console.log("DEBUG: Nueva posición tras retroceder:", this.POVCamera.position);
   }
 
   updateCameraPosition() {
     this.updateCameraOBB();
-    console.log("DEBUG: INIT FUNCTION POSITION ", this.POVCamera.position)
 
     if (this.checkCameraColission() && this.previousPosition != null) {
       this.goToPreviousPosition();
@@ -234,8 +235,6 @@ class MyScene extends THREE.Scene {
     // Guarda la posición anterior de la cámara
     this.previousPosition = this.POVCamera.position.clone();
 
-    console.log("DEBUG: actual position ", this.previousPosition);
-
     var actualIncrementX = this.incrementX;
     var actualIncrementZ = this.incrementZ;
 
@@ -246,10 +245,6 @@ class MyScene extends THREE.Scene {
     // Actualiza el OBB
     this.updateCameraOBB();
 
-    // Verifica la colisión
-    console.log("DEBUG: incremento X ", actualIncrementX)
-    console.log("DEBUG: incremento Z ", actualIncrementZ)
-    console.log("DEBUG: new position before checking ", this.POVCamera.position);
     if (this.checkCameraColission()) {
 
       this.goToPreviousPosiition();
@@ -288,22 +283,10 @@ class MyScene extends THREE.Scene {
     this.coordinateZ.value = '0';
   }
 
-  move(event) {
-
-    // switch(event.key){
-    //   case 'w':
-    //     this.POVCamera.position.x += 2;
-    //     break;
-    //   case 's':
-    //     this.POVCamera.position.x -=2;
-    //     break;
-    //   default:
-    //       console.log("error");
-    // }
-  }
 
   changePOV() {
     if (this.POV) {
+      this.POVCamera.add(this.cenitalPointer);
       this.POVButton.textContent = "POV"
       this.joystickContainer.style.display = "none";
       this.POVCamera.userData.camera.position.y = CENITAL_HEIGHT;
@@ -312,6 +295,10 @@ class MyScene extends THREE.Scene {
       this.POVCamera.userData.camera.lookAt(this.POVCamera.position.x, 0, this.POVCamera.position.z);
       this.POV = false;
       this.topBar.style.display = "block";
+      for(const object of this.movingObjects){
+        object.update();
+        this.pickableObjects.push(object);
+      }
 
       for (const object of this.pickableObjects) {
         if (typeof object.stopAnimation === 'function') {
@@ -323,23 +310,24 @@ class MyScene extends THREE.Scene {
     } else {
 
       if (!this.checkCameraColission() && this.objectSelected === null) {
+        this.POVCamera.remove(this.cenitalPointer);
         this.POVButton.textContent = "TOP";
         this.joystickContainer.style.display = "block";
         this.POVCamera.userData.camera.position.y = POV_HEIGHT;
         //this.POVCamera.userData.camera.lookAt(0,0,this.POVCamera.position.z -190)
         this.POV = true;
         this.topBar.style.display = "none";
+
         for (const object of this.pickableObjects) {
 
 
           if (typeof object.animateThroughFrames === 'function') {
-            console.log("Funciona")
             object.animateThroughFrames();
-          } else {
-            console.log("No funciona")
-
-          }
+          } 
         }
+
+        this.pickableObjects = this.pickableObjects.filter(item => !this.movingObjects.includes(item));
+        
       }
     }
 
@@ -357,6 +345,7 @@ class MyScene extends THREE.Scene {
     let index = this.pickableObjects.indexOf(this.objectSelected);
     this.pickableObjects.splice(index, 1)
     this.objectSelected.selectObject(this);
+    this.movingObjects = this.movingObjects.filter(item => item !== this.objectSelected);
     this.remove(this.objectSelected);
     this.objectSelected = null;
     this.configureEditMode();
@@ -375,9 +364,9 @@ class MyScene extends THREE.Scene {
     //   El ángulo del campo de visión vértical en grados sexagesimales
     //   La razón de aspecto ancho/alto
     //   Los planos de recorte cercano y lejano
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000000);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
     // También se indica dónde se coloca
-    this.camera.position.set(0, CENITAL_HEIGHT, 1);
+    this.camera.position.set(0, CENITAL_HEIGHT, 0);
     // Y hacia dónde mira
     var look = new THREE.Vector3(0, 0, 0);
     this.camera.lookAt(look);
@@ -396,12 +385,12 @@ class MyScene extends THREE.Scene {
 
 
     //Añadimos una OBB a la cámara para cuando pase a POV 
-    var POVGeometry = new THREE.BoxGeometry(70, 250, 70);
+    var POVGeometry = new THREE.BoxGeometry(0.7, 2.50, 0.70);
 
     POVGeometry.computeBoundingBox()
     var POVMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0 }); // Material sólido
     this.POVCamera = new THREE.Mesh(POVGeometry, POVMaterial);
-    this.POVCamera.position.set(0, 250 / 2 + 2, 0);
+    this.POVCamera.position.set(0, 2.50 / 2 + 0.2, 0);
 
     this.POVCamera.geometry.userData.obb = new OBB().fromBox3(
       this.POVCamera.geometry.boundingBox
@@ -413,6 +402,12 @@ class MyScene extends THREE.Scene {
     this.POVCamera.add(this.camera);
 
     this.updateCameraOBB();
+    var cenitalPointerGeomatry = new THREE.BoxGeometry(0.7, 1, 0.70);
+    var cenitalPointerMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false});
+    this.cenitalPointer = new THREE.Mesh(cenitalPointerGeomatry, cenitalPointerMaterial);
+    this.cenitalPointer.position.set(0,CENITAL_HEIGHT-30,0);
+    this.POVCamera.add(this.cenitalPointer);
+
 
     this.add(this.POVCamera)
   }
@@ -553,7 +548,6 @@ class MyScene extends THREE.Scene {
       this.objectSelected.update()
       this.checkColission()
 
-      // console.log("EL ARMARIO: ", this.objectSelected)
       // this.objectSelected.bbox.copy(this.bboxHelper.geometry).applyMatrix4(this.matrixWorld)
     }
 
@@ -572,14 +566,16 @@ class MyScene extends THREE.Scene {
       this.commonBlock.style.display='none';
       this.animationBlock.style.display = 'none';
       this.topBar.style.display = "block";
+      this.POVCamera.add(this.cenitalPointer);
 
     } else {
       this.POVButton.style.display = 'none';
       this.topBar.style.display = "none";
+      this.POVCamera.remove(this.cenitalPointer);
       // this.slider.style.display = 'block';
       this.slider.value = THREE.MathUtils.radToDeg(this.objectSelected.rotation.y);
       this.loop.checked = this.objectSelected.loop;
-      this.repetitionsInput = this.objectSelected.repetitions;
+      this.repetitionsInput.value = this.objectSelected.repetitions;
 
       // this.deleteButton.style.display = 'block';
       this.commonBlock.style.display='flex';
@@ -598,6 +594,7 @@ class MyScene extends THREE.Scene {
     }
   }
 
+
   getPickableObjects() {
 
     // const puertaSuperior = this.model.getObjectByName("puertaSuperior");
@@ -610,13 +607,14 @@ class MyScene extends THREE.Scene {
   }
 
   pick(event, rect) {
+    
     const e = this.getNormalizedEvent(event);
-    console.log(rect)
+  
     var mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
-
+    
     this.raycaster.setFromCamera(mouse, this.getCamera());
     var pickedObjects = this.raycaster.intersectObjects(this.pickableObjects, true);
-    console.log(this.pickableObjects)
+    
     if (pickedObjects.length > 0 && !this.POV) {
 
 
@@ -626,7 +624,6 @@ class MyScene extends THREE.Scene {
       // Subir en la jerarquía hasta encontrar el objeto padre que sea un Object3D
       while (selectedObject.parent && !(selectedObject.parent instanceof THREE.Scene)) {
         selectedObject = selectedObject.parent;
-        console.log(selectedObject)
       }
 
       if (selectedObject.isObject3D) {
@@ -644,28 +641,17 @@ class MyScene extends THREE.Scene {
           this.POVCamera.userData.camera.lookAt(this.objectSelected.position.x, 0, this.objectSelected.position.z)
 
           this.configureEditMode();
-          console.log("NO HABIA OBJETO SELECCIONADO")
 
         } else if (this.objectSelected === selectedObject) {
           if (!this.checkColission()) {
             selectedObject.selectObject(this);
             this.objectSelected = null;
-            console.log("ELIMINAMOS LA SELECCION DEL OBJETO")
             this.configureEditMode();
           }
-        } else if (this.objectSelected.frames && this.objectSelected.frames.includes(selectedObject)) {
-          //En caso de que hagamos click sobre una copia
-          console.log("SELECCIONAMOS LA COPIA")
-        }
+        } 
+      } 
 
-      } else {
-        console.log("No entro")
-      }
-
-
-    } else {
-      console.log("No funciona")
-    }
+    } 
   }
 
   addObject(objectType) {
@@ -683,7 +669,6 @@ class MyScene extends THREE.Scene {
 
           break;
         case "building_1":
-          console.log("Adding building...");
           var building1 = new Building_1();
           this.add(building1)
           this.pickableObjects.push(building1);
@@ -695,7 +680,6 @@ class MyScene extends THREE.Scene {
           break;
 
         case "building_2":
-          console.log("Adding building...");
           var building2 = new Building_2();
           this.add(building2)
           building2.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
@@ -707,7 +691,6 @@ class MyScene extends THREE.Scene {
           break;
 
         case "building_3":
-          console.log("Adding building...");
           var building3 = new Building_3();
           building3.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(building3)
@@ -719,7 +702,6 @@ class MyScene extends THREE.Scene {
           break;
 
         case "building_4":
-          console.log("Adding building...");
           var building4 = new Building_4();
           this.add(building4)
           building4.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
@@ -731,7 +713,6 @@ class MyScene extends THREE.Scene {
           break;
 
         case "concrete_1":
-          console.log("Adding building...");
           var concrete_1 = new Concrete_1();
           this.add(concrete_1)
           this.pickableObjects.push(concrete_1);
@@ -743,7 +724,6 @@ class MyScene extends THREE.Scene {
           break;
 
         case "road_1":
-          console.log("Adding building...");
           var road_1 = new Road_1();
           this.add(road_1)
           this.pickableObjects.push(road_1);
@@ -754,7 +734,6 @@ class MyScene extends THREE.Scene {
           this.configureEditMode();
           break;
         case "road_2":
-          console.log("Adding building...");
           var road_2 = new Road_2();
           road_2.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(road_2)
@@ -766,11 +745,11 @@ class MyScene extends THREE.Scene {
           break;
 
         case "car_1":
-          console.log("Adding building...");
           var car_1 = new Car_1();
           car_1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
           this.add(car_1)
           this.pickableObjects.push(car_1);
+          this.movingObjects.push(car_1);
 
           this.objectSelected = car_1;
           car_1.selectObject(this);
@@ -797,7 +776,6 @@ class MyScene extends THREE.Scene {
     for (let i = 0; i < this.pickableObjects.length && !colission; i++) {
 
       if (this.objectSelected !== this.pickableObjects[i] && this.objectSelected.visibleBBox.userData.obb.intersectsOBB(this.pickableObjects[i].visibleBBox.userData.obb)) {
-        console.log("ESTA CHOCANDO")
         colission = true;
       }
     }
@@ -818,13 +796,8 @@ class MyScene extends THREE.Scene {
     for (let i = 0; i < this.pickableObjects.length && !colission; i++) {
 
       if (this.POVCamera.userData.obb.intersectsOBB(this.pickableObjects[i].visibleBBox.userData.obb)) {
-        console.log("DEBUG: ESTA CHOCANDO")
         colission = true;
       }
-    }
-
-    if (!colission) {
-      console.log("DEBUG: no está chocando")
     }
 
     return colission;
@@ -832,7 +805,6 @@ class MyScene extends THREE.Scene {
 
 
   onTouchStart(event) {
-    console.log("ENTRO AQUI")
     if (event.touches.length === 1) { // Solo si es un solo dedo
       this.isDragging = true;
       this.previousTouchX = event.touches[0].clientX;
@@ -854,7 +826,6 @@ class MyScene extends THREE.Scene {
       // this.POVCamera.camera.rotation.x -= deltaY * 0.005; // Ajustar sensibilidad de rotación vertical
       // this.POVCamera.rotation.y -= deltaX * 0.005; // Ajustar sensibilidad de rotación horizontal
       // this.POVCamera.rotation.x -= deltaY * 0.005; // Ajustar sensibilidad de rotación vertical
-      console.log("MOVIENDO CAARA")
 
       this.previousTouchX = touch.clientX;
       this.previousTouchY = touch.clientY;
@@ -900,12 +871,18 @@ class MyScene extends THREE.Scene {
 
       // Mover la cámara en respuesta al desplazamiento del dedo
 
-      this.POVCamera.position.z -= deltaY * 0.5; // Ajustar sensibilidad de rotación horizontal
-      this.POVCamera.position.x -= deltaX * 0.5; // Ajustar sensibilidad de rotación vertical
+      this.POVCamera.position.z -= deltaY * 0.002; // Ajustar sensibilidad de rotación horizontal
+      this.POVCamera.position.x -= deltaX * 0.002; // Ajustar sensibilidad de rotación vertical
 
       if (this.objectSelected != null) {
-        this.objectSelected.position.z -= deltaY * 0.5;
-        this.objectSelected.position.x -= deltaX * 0.5;
+        this.objectSelected.position.z -= deltaY * 0.002;
+        this.objectSelected.position.x -= deltaX * 0.002;
+      }
+
+      if(!this.checkCameraColission()){
+        this.cenitalPointer.material.color.set(0x00ff00);
+      }else{
+        this.cenitalPointer.material.color.set(0xff0000);
       }
 
       //this.POVCamera.userData.camera.lookAt(new THREE.Vector3(this.POVCamera.userData.camera.position.x, 0, this.POVCamera.userData.camera.position.z));
@@ -932,8 +909,14 @@ class MyScene extends THREE.Scene {
     }
   }
 
-  onMouseEnd(event) {
+  onMouseEnd(event,rect) {
+    
     this.isDragging = false;
+
+    if (event.type.startsWith('touch') && this.isClick) {
+      this.pick(event,rect)
+    }
+    
   }
 }
 
@@ -947,22 +930,27 @@ $(function () {
   var scene = new MyScene("#WebGL-output");
   scene.background = new THREE.Color(0x87CEEB);
   var sceneDiv = document.getElementById("WebGL-output");
+ 
 
   var joystickContainer = document.getElementById("joystick-container")
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener("resize", () => scene.onWindowResize());
   sceneDiv.addEventListener("click", (event) => {
-    event.preventDefault(); 
     if(scene.isClick){
      scene.pick(event, sceneDiv.getBoundingClientRect());
     }
-  },{passive:false});
+  });
 
   // window.addEventListener('joystickMove',(event)=>{scene.moveJoystick(event)});
   sceneDiv.addEventListener('mousedown', (event) => { scene.onMouseStart(event) });
   sceneDiv.addEventListener('mousemove', (event) => { scene.onMouseMove(event) });
-  sceneDiv.addEventListener('mouseup', (event) => { scene.onMouseEnd(event) });
+  
+  sceneDiv.addEventListener('mouseup', (event) => {
+    const rect = sceneDiv.getBoundingClientRect();
+    scene.onMouseEnd(event, rect);  // Pasar rect correctamente a onMouseEnd
+  });
+
 
   sceneDiv.addEventListener('touchstart', (event) => {
     event.preventDefault(); 
@@ -974,7 +962,7 @@ $(function () {
   },{passive:false});
   sceneDiv.addEventListener('touchend', (event) => {
     event.preventDefault();
-    scene.onMouseEnd(event) 
+    scene.onMouseEnd(event,sceneDiv.getBoundingClientRect()) 
   },{passive:false});
 
   joystickContainer.addEventListener('mousedown', (event) => { scene.startDragJoystick(event) });

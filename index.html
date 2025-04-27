@@ -33,8 +33,6 @@
  
 <body>
 
-
-
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
     <button class="w3-bar-item w3-button w3-large"
     onclick="closeSidebar()">Close &times;</button>
@@ -63,7 +61,10 @@
 
     <div id="duration" class="toolbarAnimation" style="display:none">
       <div class="durationContainer"> 
-        <button id="copy"  >Frame</button>
+        <div class="centerContent">
+          <button id="copy"  >Frame</button>
+          <button id="removeFrames"  >Remove Frames</button>
+        </div>
        <label for="durationInput">Duración total (ms):</label>
         <input type="number" id="durationInput" min="100" step="100" value="2000">
         <label for="durationInput">Repeticiones:</label>
@@ -74,13 +75,14 @@
         </label>
         
       </div>
-     
+      
 
       
     </div>
  
     <div>
         <button class = "zone" id="POV">POV</button>
+        
     </div>
   </div>
   

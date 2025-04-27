@@ -39,7 +39,7 @@ class Car_1 extends THREE.Object3D {
     // const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(400, 260, 900);
+    const geometry = new THREE.BoxGeometry(4, 2.60, 9);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);
@@ -49,7 +49,7 @@ class Car_1 extends THREE.Object3D {
     )
 
     this.visibleBBox.userData.obb = new OBB()
-    this.visibleBBox.position.set(0,260/2+1.5,0);
+    this.visibleBBox.position.set(0,2.60/2+1.5,0);
 
     this.bbox = new THREE.Box3().setFromObject(this.visibleBBox,true);
     this.bboxHelper = new THREE.Box3Helper(this.bbox,0xff0000);
@@ -75,8 +75,8 @@ class Car_1 extends THREE.Object3D {
       objLoader.setMaterials(materials);
       objLoader.setPath(ruta);
       objLoader.load('Porsche_911_GT2.obj', (obj) => {
-        obj.position.set(0,125.1,0);
-        obj.scale.set(200, 200, 200); // Doble de tamaño en todos los ejes
+        obj.position.set(0,1.5,0);
+        obj.scale.set(2, 2, 2); // Doble de tamaño en todos los ejes
         this.obj = obj; // 🔹 lo guardas como propiedad de la clase
         this.add(this.obj)
          // lo añades a este Object3D
@@ -121,7 +121,7 @@ class Car_1 extends THREE.Object3D {
       this.obj.getWorldPosition(worldPos);
       this.obj.getWorldQuaternion(worldQuat);
 
-      const offset = new THREE.Vector3(0, -105, 0);
+      const offset = new THREE.Vector3(0, -1.5, 0);
       offset.applyQuaternion(worldQuat); // girar el offset si el objeto está rotado
       worldPos.add(offset); // ajustar la posición final
 
@@ -137,8 +137,11 @@ class Car_1 extends THREE.Object3D {
     }
   }
 
-  removeFrames(){
-
+  removeFrames(scene){
+    for (const frame of this.frames) {
+      scene.remove(frame);
+    }
+    this.frames = [];
   }
 
   unselectObject(scene){
@@ -226,11 +229,20 @@ class Car_1 extends THREE.Object3D {
       this.activeTweens.forEach(tween => tween.stop());
       this.activeTweens = [];
     }
+    
+    this.visibleBBox.updateMatrixWorld(true);
+    this.bboxHelper.updateMatrixWorld(true);
+
+      // this.remove(this.bboxHelper);
+      // this.remove(this.visibleBBox)
+      
   }  
   
   update() {
     this.visibleBBox.userData.obb.copy(this.visibleBBox.geometry.userData.obb)
     this.visibleBBox.userData.obb.applyMatrix4(this.visibleBBox.matrixWorld)
+    // Actualizar el Box3 que usa el helper
+ 
 }
 }
 

@@ -8,7 +8,7 @@ class Building_4 extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const buildingGeometry = new THREE.BoxGeometry( 1600, 3000, 1600); 
+    const buildingGeometry = new THREE.BoxGeometry( 16, 30, 16); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
     const perfil = textureLoader.load('./imgs/perfil4.jpg');
@@ -26,7 +26,7 @@ class Building_4 extends THREE.Object3D {
     const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(1600, 3000, 1600);
+    const geometry = new THREE.BoxGeometry(16, 30, 16);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false , transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);
@@ -36,7 +36,7 @@ class Building_4 extends THREE.Object3D {
     )
 
     this.visibleBBox.userData.obb = new OBB()
-    this.visibleBBox.position.set(0,3000/2,0);
+    this.visibleBBox.position.set(0,30/2,0);
 
     this.bbox = new THREE.Box3().setFromObject(this.visibleBBox,true);
     this.bboxHelper = new THREE.Box3Helper(this.bbox,0xff0000);
@@ -45,7 +45,7 @@ class Building_4 extends THREE.Object3D {
     this.name = 'Building_4'
     this.objectSelected = false;
 
-    cube.position.set(0,3000/2,0);
+    cube.position.set(0,30/2,0);
     this.add(cube); 
     this.update();
   }

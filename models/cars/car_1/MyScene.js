@@ -47,6 +47,7 @@ class MyScene extends THREE.Scene {
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
     this.model = new Car_1();
     this.add (this.model);
+   
 
   }
   
@@ -57,7 +58,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 0, -2000);
+    this.camera.position.set (0, 0, -20);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
