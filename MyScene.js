@@ -107,6 +107,29 @@ class MyScene extends THREE.Scene {
       this.objectSelected.repetitions = newRepetitions;
     });
 
+    this.xInput = document.getElementById('x');
+    this.xInput.addEventListener('input', () => {
+      let newX = parseFloat(this.xInput.value);
+      if (isNaN(newX)) newX = 0;
+
+      this.objectSelected.position.x = 0; 
+      this.POVCamera.position.x = 0; 
+      this.POVCamera.position.x = newX;
+      this.objectSelected.position.x = newX;
+      this.checkColission();
+    });
+
+    this.zInput = document.getElementById('z');
+    this.zInput.addEventListener('input', () => {
+      let newZ = parseFloat(this.zInput.value);
+      if (isNaN(newZ)) newZ = 0;
+      this.objectSelected.position.z = 0; 
+      this.POVCamera.position.z = 0; 
+      this.POVCamera.position.z = newZ;
+      this.objectSelected.position.z = newZ;
+      this.checkColission();
+    });
+
     this.loop = document.getElementById('loop');
     this.loop.addEventListener('click', () => {
       this.objectSelected.loop = this.loop.checked;
@@ -116,6 +139,8 @@ class MyScene extends THREE.Scene {
     this.POV = false;
     this.POVButton = document.getElementById("POV");
     this.POVButton.onclick = () => this.changePOV();
+
+    
 
 
     //Variables para el control del joystick 
@@ -579,6 +604,8 @@ class MyScene extends THREE.Scene {
 
       // this.deleteButton.style.display = 'block';
       this.commonBlock.style.display='flex';
+      this.xInput.value = this.objectSelected.position.x;
+      this.zInput.value = this.objectSelected.position.z;
 
       if (this.objectSelected.name == "car_1") {
         // this.addCopyButton.style.display = 'block';
@@ -871,12 +898,14 @@ class MyScene extends THREE.Scene {
 
       // Mover la cámara en respuesta al desplazamiento del dedo
 
-      this.POVCamera.position.z -= deltaY * 0.002; // Ajustar sensibilidad de rotación horizontal
-      this.POVCamera.position.x -= deltaX * 0.002; // Ajustar sensibilidad de rotación vertical
+      this.POVCamera.position.z -= deltaY * 0.02; // Ajustar sensibilidad de rotación horizontal
+      this.POVCamera.position.x -= deltaX * 0.02; // Ajustar sensibilidad de rotación vertical
 
       if (this.objectSelected != null) {
-        this.objectSelected.position.z -= deltaY * 0.002;
-        this.objectSelected.position.x -= deltaX * 0.002;
+        this.objectSelected.position.z -= deltaY * 0.02;
+        this.objectSelected.position.x -= deltaX * 0.02;
+        this.xInput.value = this.objectSelected.position.x;
+        this.zInput.value = this.objectSelected.position.z;
       }
 
       if(!this.checkCameraColission()){
@@ -973,7 +1002,7 @@ $(function () {
   joystickContainer.addEventListener('touchstart', (event) => { scene.startDragJoystick(event) });
   document.addEventListener('touchmove', (event) => { scene.moveJoystick(event) });
   document.addEventListener('touchend', (event) => { scene.stopDragJoystick() });
-  document.addEventListener('keydown', (event) => { scene.move(event) });
+  //document.addEventListener('keydown', (event) => { scene.move(event) });
 
 
 

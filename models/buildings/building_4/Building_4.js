@@ -26,7 +26,7 @@ class Building_4 extends THREE.Object3D {
     const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(16, 30, 16);
+    const geometry = new THREE.BoxGeometry(15.9, 30, 15.9);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false , transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);

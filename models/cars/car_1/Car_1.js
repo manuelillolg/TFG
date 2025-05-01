@@ -39,7 +39,7 @@ class Car_1 extends THREE.Object3D {
     // const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(4, 2.60, 9);
+    const geometry = new THREE.BoxGeometry(3.9, 2.60, 8.9);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);

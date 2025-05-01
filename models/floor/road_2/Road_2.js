@@ -30,7 +30,7 @@ class Road_2 extends THREE.Object3D {
     const cube = new THREE.Mesh( concreteGeometry, concreteMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(16, 0.1, 16);
+    const geometry = new THREE.BoxGeometry(15.9, 0.1, 15.9);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false , transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);

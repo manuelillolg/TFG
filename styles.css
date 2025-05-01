@@ -83,7 +83,8 @@
 #rotationSliderContainer {
     display: flex;
     flex-direction: column;  /* Deja el label encima del slider */
-    gap: 1rem;
+    gap: 2rem;
+    padding: 2px ;
     width: 100%;
 }
 
@@ -96,6 +97,21 @@
     margin-top: 5rem;
     padding: 10px;
 }
+
+.coordinates {
+    position: fixed;
+    top: 1rem;              /* Distancia desde la parte superior */
+    left: 50%;              /* Posición desde la izquierda */
+    transform: translateX(-50%); /* Centra horizontalmente */
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px;
+ 
+}
+
 
 .durationContainer {
     border-radius: 15px;
@@ -199,3 +215,9 @@
     border-radius: 50%;
 
   }
+#x {
+    width: 30%
+}
+#z {
+    width: 30%
+}

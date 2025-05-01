@@ -4,7 +4,7 @@
   if(debug){
     localhost = "localhost"
   }else{
-    localhost = "192.168.1.141"
+    localhost = "192.168.1.46"
   }
   function openSidebar() {
     loadCategories()
