@@ -19,10 +19,10 @@ import { Concrete_1 } from './models/floor/concrete_1/Concrete_1.js'
 import { Road_1 } from './models/floor/road_1/Road_1.js'
 import { Road_2 } from './models/floor/road_2/Road_2.js'
 import { Car_1 } from './models/cars/car_1/Car_1.js'
+import { LivingRoom_1 } from './models/rooms/living_room_1/LivingRoom_1.js'
 
-
-const CENITAL_HEIGHT = 80;
-const POV_HEIGHT = (240 - 250 / 2)/100;
+const CENITAL_HEIGHT = 50;
+const POV_HEIGHT = (30)/100;
 /// La clase fachada del modelo
 /**
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
@@ -329,6 +329,10 @@ class MyScene extends THREE.Scene {
         if (typeof object.stopAnimation === 'function') {
           object.stopAnimation();
         }
+        if (typeof object.configureCeiling === 'function') {
+          // El objeto tiene el método y puedes usarlo
+          object.configureCeiling();
+        }
       }
 
 
@@ -339,6 +343,7 @@ class MyScene extends THREE.Scene {
         this.POVButton.textContent = "TOP";
         this.joystickContainer.style.display = "block";
         this.POVCamera.userData.camera.position.y = POV_HEIGHT;
+        console.log(this.POVCamera)
         //this.POVCamera.userData.camera.lookAt(0,0,this.POVCamera.position.z -190)
         this.POV = true;
         this.topBar.style.display = "none";
@@ -349,6 +354,10 @@ class MyScene extends THREE.Scene {
           if (typeof object.animateThroughFrames === 'function') {
             object.animateThroughFrames();
           } 
+          if (typeof object.configureCeiling === 'function') {
+            // El objeto tiene el método y puedes usarlo
+            object.configureCeiling();
+          }
         }
 
         this.pickableObjects = this.pickableObjects.filter(item => !this.movingObjects.includes(item));
@@ -687,6 +696,8 @@ class MyScene extends THREE.Scene {
       switch (objectType) {
         case "armarioGrafico":
           var armario = new Armario();
+          armario.scale.set(0.01,0.01,0.01);
+          armario.position.set(0,2.136/2+0.1);
           this.add(armario)
           this.pickableObjects.push(armario);
 
@@ -781,7 +792,17 @@ class MyScene extends THREE.Scene {
           this.objectSelected = car_1;
           car_1.selectObject(this);
           this.configureEditMode();
-          break;
+        break;
+        case "living_room_1":
+          var living_room_1 = new LivingRoom_1();
+          living_room_1.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
+          this.add(living_room_1)
+          this.pickableObjects.push(living_room_1);
+
+          this.objectSelected = living_room_1;
+          living_room_1.selectObject(this);
+          this.configureEditMode();
+        break;
 
         default:
           console.warn("Tipo de objeto no reconocido:", objectType);

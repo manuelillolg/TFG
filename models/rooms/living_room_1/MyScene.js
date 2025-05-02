@@ -6,7 +6,7 @@ import { GUI } from '../../../libs/dat.gui.module.js'
 import { TrackballControls } from '../../../libs/TrackballControls.js'
 
 // Clases de mi proyecto
-import {Building_1} from './Building_1.js'
+import {LivingRoom_1} from './LivingRoom_1.js'
 
  
 /// La clase fachada del modelo
@@ -45,8 +45,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new Building_1();
-    this.model.position.set(0,-10,0);
+    this.model = new LivingRoom_1();
     this.add (this.model);
 
   }
@@ -58,7 +57,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 0, 90);
+    this.camera.position.set (0, 15, 2);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
@@ -69,8 +68,8 @@ class MyScene extends THREE.Scene {
     
     // Se configuran las velocidades de los movimientos
     this.cameraControl.rotateSpeed = 5;
-    this.cameraControl.zoomSpeed = -2;
-    this.cameraControl.panSpeed = 0.5;
+    this.cameraControl.zoomSpeed = -0.2;
+    this.cameraControl.panSpeed = 0.05;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
   }

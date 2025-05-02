@@ -8,7 +8,7 @@ class Road_1 extends THREE.Object3D {
 
     //Edificio de 40 unidades de alto y 10 de ancho
 
-    const concreteGeometry = new THREE.BoxGeometry( 16, 0.1, 16); 
+    const concreteGeometry = new THREE.BoxGeometry( 8, 0.1, 8); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
     const textura = textureLoader.load('./imgs/road_1.jpg');
@@ -30,7 +30,7 @@ class Road_1 extends THREE.Object3D {
     const cube = new THREE.Mesh( concreteGeometry, concreteMaterial );
 
 
-    const geometry = new THREE.BoxGeometry(15.9, 0.1, 15.9);
+    const geometry = new THREE.BoxGeometry(7.9, 0.1, 7.9);
     geometry.computeBoundingBox()
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false , transparent: true, opacity: 0.5}); // Material sólido
     this.visibleBBox = new THREE.Mesh(geometry, material);
