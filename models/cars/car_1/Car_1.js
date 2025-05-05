@@ -79,6 +79,13 @@ class Car_1 extends THREE.Object3D {
         //obj.scale.set(2, 2, 2); // Doble de tamaño en todos los ejes
         this.obj = obj; // 🔹 lo guardas como propiedad de la clase
         this.add(this.obj)
+        
+        obj.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        })
          // lo añades a este Object3D
       });
     });
@@ -106,7 +113,7 @@ class Car_1 extends THREE.Object3D {
   }
 
   addFrame(scene){
-    const mainMesh = this.children.find(child => child.isMesh);
+    
 
     if (this.obj) {
       const clone = this.obj.clone();
@@ -152,16 +159,38 @@ class Car_1 extends THREE.Object3D {
     }
   }
 
-  animateThroughFrames() {
+  animateThroughFrames(pickableObjects = []) {
     console.log("Entra");
+    let stopRequested = false;
     if (this.frames.length < 2) return;
-  
+    const firstFrame = this.frames[0];
+
+    // Obtener posición y rotación en mundo
+    const worldPos = new THREE.Vector3();
+    const worldQuat = new THREE.Quaternion();
+    firstFrame.getWorldPosition(worldPos);
+    firstFrame.getWorldQuaternion(worldQuat);
+
+    // Convertir a espacio local del padre
+    const localPos = this.parent.worldToLocal(worldPos.clone());
+    const parentQuat = this.parent.getWorldQuaternion(new THREE.Quaternion());
+    const localQuat = worldQuat.clone().premultiply(parentQuat.invert());
+
+    // Colocar el coche directamente
+    this.position.copy(localPos);
+    this.quaternion.copy(localQuat);
+    this.update(); // Para actualiza
+    this.add(this.bboxHelper);
+    this.add(this.visibleBBox)
+    this.visibleBBox.visible = false;  // Se actualiza pero no se ve
+    this.bboxHelper.visible = false;   // Se actualiza pero no se ve
+      
     const stepDuration = this.duration / (this.frames.length - 1);
     const object = this;
     this.activeTweens = []; // Limpiar animaciones previas
   
     let currentRepetition = 0;
-    let currentIndex = 0;
+    let currentIndex = 1;
   
     const createTweenForFrame = (i, onCompleteCallback) => {
       const target = this.frames[i];
@@ -181,14 +210,28 @@ class Car_1 extends THREE.Object3D {
   
       const posTween = new TWEEN.Tween(object.position)
         .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, stepDuration)
-        .easing(TWEEN.Easing.Quadratic.InOut);
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate(() => {
+          object.update(); // Aquí sí se actualizará el OBB en cada paso de la interpolación de posición
+          if (object.checkCollision(pickableObjects)) {
+            console.warn("Colisión detectada");
+            stopRequested = true;
+            object.stopAnimation();
+          }
+        });
   
       const quatObj = { t: 0 };
       const quatTween = new TWEEN.Tween(quatObj)
-        .to({ t: 1 }, stepDuration)
-        .onUpdate(() => {
-          object.quaternion.slerp(targetQuat, quatObj.t);
-        });
+      .to({ t: 1 }, stepDuration)
+      .onUpdate(() => {
+        object.quaternion.slerp(targetQuat, quatObj.t);
+        object.update();
+        if (object.checkCollision(pickableObjects)) {
+          console.warn("Colisión detectada");
+          stopRequested = true;
+          object.stopAnimation();
+        }
+      });
   
       const combinedTween = new TWEEN.Tween()
         .to({}, stepDuration)
@@ -203,47 +246,70 @@ class Car_1 extends THREE.Object3D {
     };
   
     const loop = () => {
-      const tween = createTweenForFrame(currentIndex, () => {
-        currentIndex++;
-        if (currentIndex >= this.frames.length) {
-          currentIndex = 0;
-          currentRepetition++;
-          if (!this.loop && currentRepetition >= this.repetitions) {
-            console.log("Animación completada.");
-            return; // No más repeticiones
+      if(!stopRequested){
+        const tween = createTweenForFrame(currentIndex, () => {
+          currentIndex++;
+          if (currentIndex >= this.frames.length) {
+            currentIndex = 0;
+            currentRepetition++;
+            if (!this.loop && currentRepetition >= this.repetitions) {
+              console.log("Animación completada.");
+              return; // No más repeticiones
+            }
           }
-        }
-        loop(); // Continuar con el siguiente frame
-      });
+          loop(); // Continuar con el siguiente frame
+        });
       tween.start();
+      }
     };
   
-    this.stopAnimation(); // Detener cualquier animación previa
+    this.stopAnimation(false); // Detener cualquier animación previa
     loop();
   }
+
+  checkCollision(pickableObjects) {
+    let collision = false;
+  
+    for (let i = 0; i < pickableObjects.length && !collision; i++) {
+      const target = pickableObjects[i];
+      console.log(this.visibleBBox.userData.obb.position)
+      if (this !== target && this.visibleBBox.userData.obb.intersectsOBB(target.visibleBBox.userData.obb)) {
+        collision = true;
+        this.remove(this.bboxHelper);
+        this.remove(this.visibleBBox);
+        this.bboxHelper.visible = true;
+        this.visibleBBox.visible = true;
+      }
+    }
+    return collision;
+  } 
   
   
-  
-  stopAnimation() {
+  stopAnimation(removeVisibleBox = true) {
     if (this.activeTweens) {
       this.activeTweens.forEach(tween => tween.stop());
       this.activeTweens = [];
     }
-    
+
+    if(removeVisibleBox){
+      this.visibleBBox.visible = true;
+      this.bboxHelper.visible = true;
+      this.remove(this.visibleBBox);
+      this.remove(this.bboxHelper); 
+    }
     this.visibleBBox.updateMatrixWorld(true);
     this.bboxHelper.updateMatrixWorld(true);
-
-      // this.remove(this.bboxHelper);
-      // this.remove(this.visibleBBox)
       
   }  
   
   update() {
+    this.updateMatrixWorld(true);
     this.visibleBBox.userData.obb.copy(this.visibleBBox.geometry.userData.obb)
     this.visibleBBox.userData.obb.applyMatrix4(this.visibleBBox.matrixWorld)
     // Actualizar el Box3 que usa el helper
  
-}
+  }
+
 }
 
 export { Car_1 }

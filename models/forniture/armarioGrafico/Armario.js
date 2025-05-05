@@ -51,12 +51,16 @@ class Armario extends THREE.Object3D {
     const tableroLateralGeom = new THREE.BoxGeometry(1.8, 213.6, 44);
     const tableroLateralMat = new THREE.MeshPhongMaterial({map:texture});
     const tablerolateralIzquierdo = new THREE.Mesh(tableroLateralGeom,tableroLateralMat);
+    tablerolateralIzquierdo.receiveShadow = true;
+    tablerolateralIzquierdo.castShadow = true;
 
     //0.9 es la mitad de los mm de ancho y 49.25 es la mitad de 98.5(ancho total del armario por dentro)
     tablerolateralIzquierdo.position.set(-0.9-49.25,0,0);
 
     const tableroLateralDerecho = new THREE.Mesh(tableroLateralGeom,tableroLateralMat);
     tableroLateralDerecho.position.set(0.9+49.25,0,0);
+    tableroLateralDerecho.receiveShadow = true;
+    tableroLateralDerecho.castShadow = true;
 
 
     //Tableros inferior y superior
@@ -65,9 +69,13 @@ class Armario extends THREE.Object3D {
 
     const tableroSuperior = new THREE.Mesh(tableroSuperiorGeom,trableroSuperiorMat);
     tableroSuperior.position.set(0,0.9+105,0);
+    tableroSuperior.receiveShadow = true;
+    tableroSuperior.castShadow = true;
 
     const tableroInferior = new THREE.Mesh(tableroSuperiorGeom,trableroSuperiorMat);
     tableroInferior.position.set(0,-0.9-105,0);
+    tableroInferior.receiveShadow = true;
+    tableroInferior.castShadow = true;
 
     //Pared trasera
     const tablaTraseraGeom = new THREE.BoxGeometry(102.1, 213.6, 1.8);
@@ -75,6 +83,8 @@ class Armario extends THREE.Object3D {
 
     const tablaTrasera = new THREE.Mesh(tablaTraseraGeom,tablaTraseraMat);
     tablaTrasera.position.set(0,0,-0.9-22);
+    tablaTrasera.receiveShadow = true;
+    tablaTrasera.castShadow = true;
 
     //Tabla de  abajo
     const tablaInferiorGeom = new THREE.BoxGeometry(98.5, 10, 1.8);
@@ -82,6 +92,8 @@ class Armario extends THREE.Object3D {
 
     const tablaInferior = new THREE.Mesh(tablaInferiorGeom,tablaInferiorMat);
     tablaInferior.position.set(0,5-105,-0.9+22);
+    tablaInferior.receiveShadow = true;
+    tablaInferior.castShadow = true;
 
     //Piezas interiores
     const piezaInteriorGeom = new THREE.BoxGeometry(6, 33, 6);   
@@ -89,6 +101,8 @@ class Armario extends THREE.Object3D {
     const piezaInteriorMat = new THREE.MeshPhongMaterial({map:texture});
 
     const piezaInteriorI = new THREE.Mesh(piezaInteriorGeom,piezaInteriorMat);
+    piezaInteriorI.receiveShadow = true;
+    piezaInteriorI.castShadow = true;
     const piezaInteriorD = piezaInteriorI.clone();
     
     piezaInteriorI.position.set(3-49.25,0,0);
@@ -121,6 +135,8 @@ class Armario extends THREE.Object3D {
 
     const puertaSuperiorMat = new THREE.MeshPhongMaterial({map:texture});
     const puertaSuperior = new THREE.Mesh(puertaSuperiorGeom,puertaSuperiorMat);
+    puertaSuperior.castShadow = true;
+    puertaSuperior.receiveShadow = true;
 
     puertaSuperior.position.set(0,105,22);
     //puertaSuperior.rotateX(-90*(Math.PI/180));
@@ -138,6 +154,8 @@ class Armario extends THREE.Object3D {
     const puertaInferiorArribaMat = new THREE.MeshPhongMaterial({map:texture});
 
     const puertaInferiorArriba = new THREE.Mesh(puertaInferiorArribaGeom,puertaInferiorArribaMat);
+    puertaInferiorArriba.castShadow = true;
+    puertaInferiorArriba.receiveShadow = true;
     puertaInferiorArriba.position.set(0,(111/2)+9,0.9);
     puertaInferiorArriba.userData = this;
     puertaInferiorArriba.name ="puertaInferior";
@@ -148,6 +166,8 @@ class Armario extends THREE.Object3D {
 
     const puertaInferiorAbajoMat = new THREE.MeshPhongMaterial({map:texture});
     const puertaInferiorAbajo = new THREE.Mesh(puertaInferiorAbajoGeom,puertaInferiorAbajoMat);
+    puertaInferiorAbajo.castShadow = true;
+    puertaInferiorAbajo.receiveShadow = true;
 
     //puertaInferiorAbajo.position.set(0,14-105+10,-0.9-0.9+22);
     

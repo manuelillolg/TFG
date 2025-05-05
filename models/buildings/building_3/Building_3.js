@@ -15,14 +15,16 @@ class Building_3 extends THREE.Object3D {
 
     // Crear materiales para cada cara
     const buildingMaterial = [
-      new THREE.MeshBasicMaterial({ map: perfil }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({ map: perfil }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-      new THREE.MeshBasicMaterial({ map: perfil }),    // Frente con textura
-      new THREE.MeshBasicMaterial({ map: perfil })  // Parte trasera
+      new THREE.MeshStandardMaterial({ map: perfil }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({ map: perfil }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte superior
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte inferior
+      new THREE.MeshStandardMaterial({ map: perfil }),    // Frente con textura
+      new THREE.MeshStandardMaterial({ map: perfil })  // Parte trasera
     ];
     const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
+    cube.castShadow = true;
+    cube.receiveShadow = true;
 
 
     const geometry = new THREE.BoxGeometry(15.9, 30, 15.9);

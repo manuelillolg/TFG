@@ -15,12 +15,12 @@ class Concrete_1 extends THREE.Object3D {
 
     // Crear materiales para cada cara
     const concreteMaterial = [
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ map: textura }), // Parte superior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa}),    // Frente con textura
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa })  // Parte trasera
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ map: textura }), // Parte superior
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte inferior
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa}),    // Frente con textura
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa })  // Parte trasera
     ];
 
     textura.wrapS = THREE.RepeatWrapping;
@@ -28,6 +28,8 @@ class Concrete_1 extends THREE.Object3D {
 
     textura.repeat.set(4,4)
     const cube = new THREE.Mesh( concreteGeometry, concreteMaterial );
+    cube.castShadow = true;
+    cube.receiveShadow = true;
 
 
     const geometry = new THREE.BoxGeometry(7.9, 0.1, 7.9);

@@ -16,12 +16,12 @@ class LivingRoom_1 extends THREE.Object3D {
 
     // Crear materiales para cada cara
     const concreteMaterial = [
-      new THREE.MeshBasicMaterial({  map: textura  }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({  map: textura  }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ map: textura }), // Parte superior
-      new THREE.MeshBasicMaterial({ map: textura  }), // Parte inferior
-      new THREE.MeshBasicMaterial({  map: textura }),    // Frente con textura
-      new THREE.MeshBasicMaterial({  map: textura  })  // Parte trasera
+      new THREE.MeshStandardMaterial({  map: textura  }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({  map: textura  }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ map: textura }), // Parte superior
+      new THREE.MeshStandardMaterial({ map: textura  }), // Parte inferior
+      new THREE.MeshStandardMaterial({  map: textura }),    // Frente con textura
+      new THREE.MeshStandardMaterial({  map: textura  })  // Parte trasera
     ];
 
     textura.wrapS = THREE.RepeatWrapping;
@@ -29,18 +29,20 @@ class LivingRoom_1 extends THREE.Object3D {
 
     textura.repeat.set(6,12)
     const cube = new THREE.Mesh( floor, concreteMaterial );
+    cube.receiveShadow = true;
+    cube.castShadow = true;
 
 
     //Techo
     const ceilingGeometry = new THREE.BoxGeometry( 3.5, 0.1, 6); 
     const ceilingTexture = textureLoader.load('./imgs/wall_1.jpg');
     const ceilingMaterial = [
-      new THREE.MeshBasicMaterial({  map:ceilingTexture }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({  map:ceilingTexture }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ map: ceilingTexture }), // Parte superior
-      new THREE.MeshBasicMaterial({ map: ceilingTexture }), // Parte inferior
-      new THREE.MeshBasicMaterial({  map: ceilingTexture}),    // Frente con textura
-      new THREE.MeshBasicMaterial({  map: ceilingTexture })  // Parte trasera
+      new THREE.MeshStandardMaterial({  map:ceilingTexture }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({  map:ceilingTexture }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ map: ceilingTexture }), // Parte superior
+      new THREE.MeshStandardMaterial({ map: ceilingTexture }), // Parte inferior
+      new THREE.MeshStandardMaterial({  map: ceilingTexture}),    // Frente con textura
+      new THREE.MeshStandardMaterial({  map: ceilingTexture })  // Parte trasera
     ];
     ceilingTexture.wrapS = THREE.RepeatWrapping;
     ceilingTexture.wrapT = THREE.RepeatWrapping;
@@ -48,18 +50,20 @@ class LivingRoom_1 extends THREE.Object3D {
     this.ceiling = new THREE.Mesh( ceilingGeometry, ceilingMaterial );
     this.ceiling.position.set(0,0.1/2+0.1+2.55,0);
     //this.add(this.ceiling);
+    this.ceiling.receiveShadow = true;
+    this.ceiling.castShadow = true;
 
 
     const walltexture = textureLoader.load('./imgs/wall_1.jpg');
 
     const longWallGeometry = new THREE.BoxGeometry( 0.1, 2.55, 6); 
     const longWallMaterial = [
-      new THREE.MeshBasicMaterial({  map:walltexture }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({  map:walltexture }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa}),    // Frente con textura
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa })  // Parte trasera
+      new THREE.MeshStandardMaterial({  map:walltexture }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({  map:walltexture }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte superior
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte inferior
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa}),    // Frente con textura
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa })  // Parte trasera
     ];
 
     walltexture.wrapS = THREE.RepeatWrapping;
@@ -70,21 +74,25 @@ class LivingRoom_1 extends THREE.Object3D {
     const longWall1 = new THREE.Mesh( longWallGeometry, longWallMaterial );
     longWall1.position.set(-0.1/2-(3.5/2),2.55/2+0.1,0);
     this.add(longWall1);
+    longWall1.receiveShadow = true;
+    longWall1.castShadow = true;
 
     const longWall2 = new THREE.Mesh( longWallGeometry, longWallMaterial );
     longWall2.position.set(0.1/2+(3.5/2),2.55/2 +0.1,0);
     this.add(longWall2);
+    longWall2.receiveShadow = true;
+    longWall2.castShadow = true;
 
     const shortwalltexture = textureLoader.load('./imgs/wall_1.jpg');
 
     const shortWallGeometry = new THREE.BoxGeometry( 3.5, 2.55, 0.1); 
     const shortWallMaterial = [
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa  }), // Lateral izquierda
-      new THREE.MeshBasicMaterial({  color: 0xaaaaaa  }), // Lateral derecha
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
-      new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-      new THREE.MeshBasicMaterial({  map:shortwalltexture}),    // Frente con textura
-      new THREE.MeshBasicMaterial({  map:shortwalltexture  })  // Parte trasera
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa  }), // Lateral izquierda
+      new THREE.MeshStandardMaterial({  color: 0xaaaaaa  }), // Lateral derecha
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte superior
+      new THREE.MeshStandardMaterial({ color: 0xaaaaaa }), // Parte inferior
+      new THREE.MeshStandardMaterial({  map:shortwalltexture}),    // Frente con textura
+      new THREE.MeshStandardMaterial({  map:shortwalltexture  })  // Parte trasera
     ];
 
     shortwalltexture.wrapS = THREE.RepeatWrapping;
@@ -95,45 +103,57 @@ class LivingRoom_1 extends THREE.Object3D {
     const shortWall1 = new THREE.Mesh( shortWallGeometry, shortWallMaterial );
     shortWall1.position.set(0, 2.55/2 +0.1, -0.1/2-6/2);
     this.add(shortWall1);
+    shortWall1.receiveShadow = true;
+    shortWall1.castShadow = true;
 
     const shortWall2 = new THREE.Mesh( shortWallGeometry, shortWallMaterial );
     shortWall2.position.set(0, 2.55/2 +0.1, 0.1/2+6/2);
     this.add(shortWall2);
+    shortWall2.receiveShadow = true;
+    shortWall2.castShadow = true;
 
     //Escalera
     const stairsTexture = textureLoader.load('./imgs/stairs.jpg');
     const stairsGeometry = new THREE.PlaneGeometry(0.93, 2.55); // ancho x alto en metros
-    const stairsMaterial = new THREE.MeshBasicMaterial({ map: stairsTexture, transparent: true });
+    const stairsMaterial = new THREE.MeshStandardMaterial({ map: stairsTexture, transparent: true });
     const stairs = new THREE.Mesh(stairsGeometry, stairsMaterial);
     stairs.position.set(-3.5/2+0.01, 2.55/2+0.1, -0.93/2+6/2-2.14);
     stairs.rotation.y = Math.PI/2;
     this.add(stairs);
+    stairs.receiveShadow = true;
+    stairs.castShadow = true;
 
     //Puerta calle
     const streetDoorTexture = textureLoader.load('./imgs/streetDoor.jpg');
     const streetDoorGeometry = new THREE.PlaneGeometry(1.22, 2.09); // ancho x alto en metros
-    const streetDoorMaterial = new THREE.MeshBasicMaterial({ map: streetDoorTexture, transparent: true });
+    const streetDoorMaterial = new THREE.MeshStandardMaterial({ map: streetDoorTexture, transparent: true });
     const streetDoor = new THREE.Mesh(streetDoorGeometry, streetDoorMaterial);
     streetDoor.position.set(3.5/2-0.01, 2.09/2+0.1, -1.22/2+6/2-1.09);
     streetDoor.rotation.y = -Math.PI/2;
     this.add(streetDoor);
+    streetDoor.receiveShadow = true;
+    streetDoor.castShadow = true;
 
     //Puerta interior
     const insideDoorTexture = textureLoader.load('./imgs/insideDoor.jpg');
     const insideDoorGeometry = new THREE.PlaneGeometry(0.79, 2.11); // ancho x alto en metros
-    const insideDoorMaterial = new THREE.MeshBasicMaterial({ map: insideDoorTexture, transparent: true });
+    const insideDoorMaterial = new THREE.MeshStandardMaterial({ map: insideDoorTexture, transparent: true });
     const insideDoor = new THREE.Mesh(insideDoorGeometry, insideDoorMaterial);
     insideDoor.position.set(-0.79/2 + 3.5/2, 2.11/2+0.1, -3+0.01);
     this.add(insideDoor);
+    insideDoor.receiveShadow = true;
+    insideDoor.castShadow = true;
 
     //Puerta cuarto
     const roomDoorTexture = textureLoader.load('./imgs/roomDoor.jpg');
     const roomDoorGeometry = new THREE.PlaneGeometry(0.96, 2.08); // ancho x alto en metros
-    const roomDoorMaterial = new THREE.MeshBasicMaterial({ map: roomDoorTexture, transparent: true });
+    const roomDoorMaterial = new THREE.MeshStandardMaterial({ map: roomDoorTexture, transparent: true });
     const roomDoor = new THREE.Mesh(roomDoorGeometry, roomDoorMaterial);
     roomDoor.position.set(-0.96/2 + 3.5/2-0.16, 2.08/2+0.1, +3-0.01);
     roomDoor.rotation.y = Math.PI;
     this.add(roomDoor);
+    roomDoor.receiveShadow = true;
+    roomDoor.castShadow = true;
 
 
 

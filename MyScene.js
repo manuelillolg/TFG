@@ -7,6 +7,7 @@ import { GUI } from './libs/dat.gui.module.js'
 import { TrackballControls } from './libs/TrackballControls.js'
 import { DragControls } from './libs/DragControls.js'
 import { OBB } from './libs/OBB.js'
+import { closeSidebar, openSidebar } from './scripts/sidebarMenu.js';
 
 // Clases de mi proyecto
 import { Armario } from './models/forniture/armarioGrafico/Armario.js'
@@ -42,6 +43,7 @@ class MyScene extends THREE.Scene {
 
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
+    this.renderer.shadowMap.enabled = true;
 
     // Se crea la interfaz gráfica de usuario
     // this.gui = this.createGUI ();
@@ -92,6 +94,9 @@ class MyScene extends THREE.Scene {
 
     this.removeFramesButton = document.getElementById("removeFrames");
     this.removeFramesButton.onclick = ()=> this.objectSelected.removeFrames(this);
+
+    document.getElementById('openNav').addEventListener('click', openSidebar);
+    document.getElementById('closeNav').addEventListener('click', closeSidebar);
     //Añadir la funcionalidad de on click al botón de copia 
 
     this.animationBlock = document.getElementById('duration');
@@ -99,6 +104,7 @@ class MyScene extends THREE.Scene {
     durationInput.addEventListener('input', () => {
       const newDuration = parseInt(durationInput.value, 10);
       this.objectSelected.duration = newDuration;
+      console.log(this.objectSelected.duration);
     });
 
     this.repetitionsInput = document.getElementById('repetitionsInput');
@@ -352,7 +358,7 @@ class MyScene extends THREE.Scene {
 
 
           if (typeof object.animateThroughFrames === 'function') {
-            object.animateThroughFrames();
+            object.animateThroughFrames(this.pickableObjects);
           } 
           if (typeof object.configureCeiling === 'function') {
             // El objeto tiene el método y puedes usarlo
@@ -512,8 +518,9 @@ class MyScene extends THREE.Scene {
     // La luz focal, además tiene una posición, y un punto de mira
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-    this.spotLight = new THREE.SpotLight(0xffffff, 1);
-    this.spotLight.position.set(0, 40000, 0);
+    this.spotLight = new THREE.SpotLight(0xffffff, 0.6);
+    this.spotLight.position.set(0, 100, 100);
+    this.spotLight.castShadow = true;
     this.add(this.spotLight);
   }
 
@@ -980,6 +987,19 @@ $(function () {
   var scene = new MyScene("#WebGL-output");
   scene.background = new THREE.Color(0x87CEEB);
   var sceneDiv = document.getElementById("WebGL-output");
+
+  var canvas = scene.renderer.domElement;
+  
+  canvas.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    closeSidebar();
+  });
+  canvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+  
+    const modelName = e.dataTransfer.getData('text/plain');
+    scene.addObject(modelName);
+  });
  
 
   var joystickContainer = document.getElementById("joystick-container")

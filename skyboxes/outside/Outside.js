@@ -23,14 +23,16 @@ class Outside extends THREE.Object3D {
 
     // Crear materiales para cada cara
     const buildingMaterial = [
-      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral izquierda
-      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral derecha
-      new THREE.MeshBasicMaterial({ map:suelo }), // Parte superior
-      new THREE.MeshBasicMaterial({ map:suelo, side: THREE.BackSide  }), // Parte inferior
-      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide}),    // Frente con textura
-      new THREE.MeshBasicMaterial({ map:suelo ,side: THREE.BackSide })  // Parte trasera
+      new THREE.MeshStandardMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral izquierda
+      new THREE.MeshStandardMaterial({ map:suelo ,side: THREE.BackSide}), // Lateral derecha
+      new THREE.MeshStandardMaterial({ map:suelo }), // Parte superior
+      new THREE.MeshStandardMaterial({ map:suelo, side: THREE.BackSide  }), // Parte inferior
+      new THREE.MeshStandardMaterial({ map:suelo ,side: THREE.BackSide}),    // Frente con textura
+      new THREE.MeshStandardMaterial({ map:suelo ,side: THREE.BackSide })  // Parte trasera
     ];
     const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
+    cube.castShadows = true;
+    cube.receiveShadows = true;
     
 
     this.name = 'Outside'

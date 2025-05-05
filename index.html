@@ -16,7 +16,7 @@
     <script type="text/javascript" src="./libs/jquery.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="styles.css">
-    <script src="scrpits/sidebarMenu.js"></script>
+    
     
     <script type="importmap">
         {
@@ -26,7 +26,8 @@
         }
     </script>
 
-  <script type="module" src="./MyScene.js"></script>    
+  <script type="module" src="./MyScene.js"></script>   
+  <script type="module" src="scripts/sidebarMenu.js"></script> 
     
 </head>
 
@@ -34,8 +35,8 @@
 <body>
 
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
-    <button class="w3-bar-item w3-button w3-large"
-    onclick="closeSidebar()">Close &times;</button>
+    <button class="w3-bar-item w3-button w3-large" id="closeNav"
+    >Close &times;</button>
 
     <!-- Menú desplegable-->
      <div id="menuCategories"></div>
@@ -44,7 +45,7 @@
   <div id="main">
   
   <div class="w3-teal front" id="topBar">
-    <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="openSidebar()">&#9776;</button>
+    <button id="openNav" class="w3-button w3-teal w3-xlarge" >&#9776;</button>
   </div>
   
   
