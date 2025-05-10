@@ -215,6 +215,17 @@
     border-radius: 50%;
 
   }
+
+/* .proceduralBuilding {
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    background-color: green;
+    height: 50%;
+    width: 50%;
+} */
+
 #x {
     width: 30%
 }
