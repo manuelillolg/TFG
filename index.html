@@ -28,6 +28,9 @@
 
   <script type="module" src="./MyScene.js"></script>   
   <script type="module" src="scripts/sidebarMenu.js"></script> 
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
 </head>
 
@@ -53,8 +56,6 @@
 
     <div id="commonBlock" class="toolbar " style="display:none" > 
       <div class="slidecontainer " id="rotationSlider">
-          <label for="myRange">Rotación del objeto:</label>
-          <input type="range" min="-180" max="180" step ="1" value="0" class="slider" id="myRange" >
           <div class="coordinates">
             <label for="x">x: </label>
             <input type="number" id="x"  step="1">
@@ -85,14 +86,151 @@
         
       </div>      
     </div>
+    <div id="modal" style="display: none;">
+      <div id="overlay"></div>
+      <div id ="proceduralBuilding"class="proceduralBuilding">
+        
+        <div id="step1" style="display: flex;">
+          <div>
+            <label for="heightInput">Altura (múltiplo de 3):</label><br>
+            <input type="number" id="heightInput" min="3" max="30" step="3" value="3"/>
+          </div>
 
-    <!-- <div class ="proceduralBuilding">
-      hjk
+          <div>
+            <label for="widthInput">Anchura (múltiplo de 6):</label><br>
+            <input type="number" id="widthInput" min="6" max="24" step="6" value="6"/>
+          </div>
 
-    </div> -->
+          <div>
+            <label for="depthInput">Profundidad (múltiplo de 6):</label><br>
+            <input type="number" id="depthInput" min="6" max="24" step="6" value="6" />
+          </div>
+          <div class="select">
+            <p>Fachada</p>
+            <select id="wallDropdown" style="width: 200px;">
+              <option value="brick" data-image="./imgs/brick.jpg">Ladrillo</option>
+              <option value="white-brick" data-image="./imgs/white-brick.jpg">Ladrillo blanco</option>
+            </select>
+          </div>
+          
+          <div class="button-group">
+            <button id="nextBtn">Siguiente</button>
+            <button id="cancelBtn" class="cancelBtn">Cancelar</button>
+          </div>
+        </div>
+
+        <div id ="step2" style="display: none;">
+          <!-- <div class="select">
+            <p>Planta 1</p>
+            <select id="dropdown1">
+              <option value="-">-</option>
+              <option value="brick_wall">brick wall</option>
+              <option value="brick_wall_door">brick wall with door</option>
+              <option value="brick_wall_window">brick wall with window</option>
+              <option value="glass_wall">glass wall</option>
+              <option value="glass_wall_door">glass wall with door</option>
+              <option value="glass_wall_window">glass wall with window</option>
+            </select>
+          </div>
+        
+          <div>
+            <p>Planta 2</p>
+            <select id="dropdown2" disabled>
+              <option value="-">-</option>
+              <option value="brick_wall">brick wall</option>
+              <option value="brick_wall_door">brick wall with door</option>
+              <option value="brick_wall_window">brick wall with window</option>
+              <option value="glass_wall">glass wall</option>
+              <option value="glass_wall_door">glass wall with door</option>
+              <option value="glass_wall_window">glass wall with window</option>
+            </select>
+          </div>
+        
+          <div>
+            <p>Planta 3</p>
+            <select id="dropdown3" disabled>
+              <option value="-">-</option>
+              <option value="brick_wall">brick wall</option>
+              <option value="brick_wall_door">brick wall with door</option>
+              <option value="brick_wall_window">brick wall with window</option>
+              <option value="glass_wall">glass wall</option>
+              <option value="glass_wall_door">glass wall with door</option>
+              <option value="glass_wall_window">glass wall with window</option>
+            </select>
+          </div>
+        
+          <div>
+            <p>Planta 4</p>
+            <select id="dropdown4" disabled>
+              <option value="-">-</option>
+              <option value="brick_wall">brick wall</option>
+              <option value="brick_wall_door">brick wall with door</option>
+              <option value="brick_wall_window">brick wall with window</option>
+              <option value="glass_wall">glass wall</option>
+              <option value="glass_wall_door">glass wall with door</option>
+              <option value="glass_wall_window">glass wall with window</option>
+            </select>
+          </div> -->
+          <div id="dropdownContainer"></div>
+
+          <!-- Botones -->
+          <div class="button-group">
+            <button id="saveBtn">Guardar</button>
+            <button id="cancelBtn2" class="cancelBtn">Cancelar</button>
+          </div>
+        </div>
+      </div>  
+    </div>
+    <script>
+      function formatOption(option) {
+        if (!option.id) return option.text;
+
+        const image = $(option.element).data('image');
+
+        if (image) {
+          return $(`
+            <span style="display: flex; align-items: center;">
+              <img src="${image}" style="width: 60px; height: 60px;">
+            </span>
+          `);
+        } else {
+          return $(`<span>${option.text}</span>`);
+        }
+      }
+
+      $('#wallDropdown').select2({
+        templateResult: formatOption,
+        templateSelection: formatOption,
+        minimumResultsForSearch: -1
+      });
+    </script>
+    <!-- <script>
+      const dropdowns = [
+        document.getElementById("dropdown1"),
+        document.getElementById("dropdown2"),
+        document.getElementById("dropdown3"),
+        document.getElementById("dropdown4")
+      ];
+    
+      dropdowns.forEach((dropdown, index) => {
+        dropdown.addEventListener("change", () => {
+          // Siempre desactiva y resetea los siguientes
+          for (let i = index + 1; i < dropdowns.length; i++) {
+            dropdowns[i].value = "-";
+            dropdowns[i].disabled = true;
+          }
+    
+          // Si no es "-", habilita el siguiente
+          if (dropdown.value !== "-" && index + 1 < dropdowns.length) {
+            dropdowns[index + 1].disabled = false;
+          }
+        });
+      });
+    </script> -->
  
     <div>
         <button class = "zone" id="POV">POV</button>
+        <button class = "zone" id="screenshot-btn" style="display:none;"><img src="./imgs/camera.png" alt="Eliminar" width="24" height="24"></button>
         
     </div>
   </div>

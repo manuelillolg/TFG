@@ -22,7 +22,7 @@ import { Road_2 } from './models/floor/road_2/Road_2.js'
 import { Car_1 } from './models/cars/car_1/Car_1.js'
 import { LivingRoom_1 } from './models/rooms/living_room_1/LivingRoom_1.js'
 
-const CENITAL_HEIGHT = 50;
+const CENITAL_HEIGHT = 70;
 const POV_HEIGHT = (30)/100;
 /// La clase fachada del modelo
 /**
@@ -40,7 +40,9 @@ class MyScene extends THREE.Scene {
     this.objectSelected = null;
     this.previousTouchX = 0;
     this.previousTouchY = 0;
-
+    this.translationMode = true;
+    this.objectSelectedClicked = false;
+    this.objectHovered = null;
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     this.renderer.shadowMap.enabled = true;
@@ -83,9 +85,6 @@ class MyScene extends THREE.Scene {
     
     this.commonBlock = document.getElementById("commonBlock");
 
-    this.slider = document.getElementById("myRange");
-    this.slider.oninput = () => this.rotateObjectSelected();
-
     this.deleteButton = document.getElementById("delete")
     this.deleteButton.onclick = () => this.deleteObjectSelected();
 
@@ -112,6 +111,106 @@ class MyScene extends THREE.Scene {
       const newRepetitions = parseInt(repetitionsInput.value, 10);
       this.objectSelected.repetitions = newRepetitions;
     });
+
+    this.proceduralBuildingDiv = document.getElementById('modal');
+    this.dropdowns = [];
+    this.wallDropdown = document.getElementById("wallDropdown")
+    this.cancelButton2 = document.getElementById('cancelBtn2');
+    this.step1 = document.getElementById('step1');
+    this.step2 = document.getElementById('step2');
+    const heightInput = document.getElementById("heightInput");
+    const widthInput = document.getElementById("widthInput");
+    const depthInput = document.getElementById("depthInput");
+    const dropdownContainer = document.getElementById("dropdownContainer");
+    const wallOptions = `
+      <option value="-">-</option>
+      <option data-image="./imgs/door.jpg" value="door">Principal Door</option>
+      <option data-image="./imgs/window.jpg" value="window">Window</option>
+      <option data-image="./imgs/balcony.png" value="balcony">Balcony</option>
+    `;
+    this.cancelButton2.addEventListener('click',()=>{
+      for(let dropdown of this.dropdowns){
+        if(dropdown.id != "dropdown1"){
+          dropdown.disabled = true;
+        }
+        dropdown.value = '-'
+      }
+      this.proceduralBuildingDiv.style.display = 'none';
+      this.step2.style.display ="none";
+      this.step1.style.display = "flex";
+    })
+    this.cancelButton = document.getElementById('cancelBtn');
+    this.cancelButton.addEventListener('click',()=>{
+      //Logica de eliminacion de datos 
+
+      this.proceduralBuildingDiv.style.display = 'none';
+      this.step2.style.display ="none";
+      this.step1.style.display = "flex";
+    })
+
+    this.nextButton = document.getElementById('nextBtn');
+    this.nextButton.addEventListener('click',()=>{
+      //Logica de guardar los datos
+      const numPlantas = heightInput.value / 3;
+
+      // Limpiar por si se regenera
+      dropdownContainer.innerHTML = "";
+
+      for (let i = 1; i <= numPlantas; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = `
+          <p>Planta ${i}</p>
+          <select id="dropdown${i} style="width: 200px !important;">
+            ${wallOptions}
+          </select>
+        `;
+        dropdownContainer.appendChild(wrapper);
+      }
+      this.dropdowns = Array.from(dropdownContainer.querySelectorAll("select"));
+      // Inicializar Select2 en cada uno
+      this.dropdowns.forEach(select => {
+        $(select).select2({
+          templateResult: formatOption,
+          templateSelection: formatOption,
+          minimumResultsForSearch: -1
+        });
+      });
+      this.step1.style.display ="none";
+      this.step2.style.display ="flex";
+    })
+    this.saveButton = document.getElementById('saveBtn');
+    this.saveButton.addEventListener('click',()=>{
+      //Aquí se tiene que crear el edificio
+      var building4 = new Building_4(widthInput.value, heightInput.value, depthInput.value,this.wallDropdown.value) ;
+      this.add(building4)
+      this.pickableObjects.push(building4);
+      building4.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
+    
+
+      this.objectSelected = building4;
+      building4.selectObject();
+      this.configureEditMode();
+
+      for(let dropdown of this.dropdowns){
+
+        //Aquí se llama al método de crear planta solo si el value es distinto de "-". El resto de opciones serían el nombre de la textura que se pasa por parámetro
+
+        
+        building4.createFloor(dropdown.value);
+        
+        
+        dropdown.value = '-'
+      }
+      this.proceduralBuildingDiv.style.display = 'none';
+
+      //Codigo para centrar la cámara en el edificio etc.
+      this.POVCamera.position.x = this.objectSelected.position.x;
+      this.POVCamera.position.z = this.objectSelected.position.z;
+      this.POVCamera.userData.camera.lookAt(this.objectSelected.position.x, 0, this.objectSelected.position.z);
+      
+      this.step2.style.display ="none";
+      this.step1.style.display = "flex";
+    })
 
     this.xInput = document.getElementById('x');
     this.xInput.addEventListener('input', () => {
@@ -146,7 +245,25 @@ class MyScene extends THREE.Scene {
     this.POVButton = document.getElementById("POV");
     this.POVButton.onclick = () => this.changePOV();
 
-    
+    this.screenshotButton = document.getElementById("screenshot-btn");
+    this.screenshotButton.addEventListener('click', () => {
+      // Renderiza la escena por si no está actualizada
+      this.renderer.render(this, this.getCamera());
+
+      // Captura del canvas como imagen base64 (PNG)
+      const dataURL = this.renderer.domElement.toDataURL("image/png");
+
+      const now = new Date();
+      const pad = n => n.toString().padStart(2, '0');
+      const filename = `screenshot_${pad(now.getDate())}${pad(now.getMonth()+1)}${now.getFullYear()}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.png`;
+
+      // Crea un enlace para descargar la imagen
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = filename;
+      link.click(); 
+    });
+   
 
 
     //Variables para el control del joystick 
@@ -326,6 +443,7 @@ class MyScene extends THREE.Scene {
       this.POVCamera.userData.camera.lookAt(this.POVCamera.position.x, 0, this.POVCamera.position.z);
       this.POV = false;
       this.topBar.style.display = "block";
+      this.screenshotButton.style.display = "none";
       for(const object of this.movingObjects){
         object.update();
         this.pickableObjects.push(object);
@@ -350,6 +468,7 @@ class MyScene extends THREE.Scene {
         this.joystickContainer.style.display = "block";
         this.POVCamera.userData.camera.position.y = POV_HEIGHT;
         console.log(this.POVCamera)
+        this.screenshotButton.style.display = "block";
         //this.POVCamera.userData.camera.lookAt(0,0,this.POVCamera.position.z -190)
         this.POV = true;
         this.topBar.style.display = "none";
@@ -391,8 +510,8 @@ class MyScene extends THREE.Scene {
     this.configureEditMode();
   }
 
-  rotateObjectSelected() {
-    let degrees = parseFloat(this.slider.value); // Valor en grados
+  rotateObjectSelected(grados) {
+    let degrees = parseFloat(grados); // Valor en grados
     let radians = THREE.MathUtils.degToRad(degrees); // Convertir a radianes
     this.objectSelected.rotation.y = radians; // Ajustar la rotación en el eje Y
     this.objectSelected.update()
@@ -610,11 +729,11 @@ class MyScene extends THREE.Scene {
       this.POVCamera.add(this.cenitalPointer);
 
     } else {
+      this.translationMode = true;
       this.POVButton.style.display = 'none';
       this.topBar.style.display = "none";
       this.POVCamera.remove(this.cenitalPointer);
       // this.slider.style.display = 'block';
-      this.slider.value = THREE.MathUtils.radToDeg(this.objectSelected.rotation.y);
       this.loop.checked = this.objectSelected.loop;
       this.repetitionsInput.value = this.objectSelected.repetitions;
 
@@ -671,7 +790,9 @@ class MyScene extends THREE.Scene {
 
       if (selectedObject.isObject3D) {
         if (this.objectSelected === null) {
-          selectedObject.selectObject(this);
+          if(this.objectHovered != selectedObject){
+            selectedObject.selectObject(this);
+          }
           this.objectSelected = selectedObject;
 
 
@@ -686,15 +807,32 @@ class MyScene extends THREE.Scene {
           this.configureEditMode();
 
         } else if (this.objectSelected === selectedObject) {
-          if (!this.checkColission()) {
-            selectedObject.selectObject(this);
-            this.objectSelected = null;
-            this.configureEditMode();
+          // if (!this.checkColission()) {
+          //   selectedObject.selectObject(this);
+          //   this.objectSelected = null;
+          //   this.configureEditMode();
+          // }
+          if(this.translationMode){
+            this.translationMode = false;
+            this.renderer.domElement.style.cursor = 'ew-resize';
+            
+          }else{
+            this.translationMode = true;
+            this.renderer.domElement.style.cursor = 'move';
+        
           }
         } 
       } 
 
-    } 
+    }else if(pickedObjects.length == 0 && !this.POV){
+      if (!this.checkColission()) {
+          this.objectSelected.selectObject(this);
+          this.objectHovered = null;
+          this.objectSelected = null;
+          this.configureEditMode();
+          this.translationMode = true;
+      }
+    }
   }
 
   addObject(objectType) {
@@ -747,15 +885,16 @@ class MyScene extends THREE.Scene {
           break;
 
         case "building_4":
-          var building4 = new Building_4();
-          this.add(building4)
-          building4.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
-          this.pickableObjects.push(building4);
+          // var building4 = new Building_4();
+          // this.add(building4)
+          // building4.position.set(this.POVCamera.position.x, 0, this.POVCamera.position.z);
+          // this.pickableObjects.push(building4);
 
-          this.objectSelected = building4;
-          building4.selectObject();
-          this.configureEditMode();
-          break;
+          // this.objectSelected = building4;
+          // building4.selectObject();
+          // this.configureEditMode();
+          this.proceduralBuildingDiv.style.display="flex";
+        break;
 
         case "concrete_1":
           var concrete_1 = new Concrete_1();
@@ -817,10 +956,11 @@ class MyScene extends THREE.Scene {
       }
 
 
-      this.POVCamera.position.x = this.objectSelected.position.x;
-      this.POVCamera.position.z = this.objectSelected.position.z;
-      this.POVCamera.userData.camera.lookAt(this.objectSelected.position.x, 0, this.objectSelected.position.z);
-
+      if(objectType!= 'building_4'){
+        this.POVCamera.position.x = this.objectSelected.position.x;
+        this.POVCamera.position.z = this.objectSelected.position.z;
+        this.POVCamera.userData.camera.lookAt(this.objectSelected.position.x, 0, this.objectSelected.position.z);
+      }
     }
   }
 
@@ -901,7 +1041,7 @@ class MyScene extends THREE.Scene {
     }
   }
 
-  onMouseStart(event) {
+  onMouseStart(event,rect) {
 
     this.isDragging = true;
     this.isClick = true;
@@ -909,9 +1049,18 @@ class MyScene extends THREE.Scene {
     this.previousTouchX = e.clientX;
     this.previousTouchY = e.clientY;
 
+    if(this.objectSelected != null){
+      var mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+      this.raycaster.setFromCamera(mouse,this.getCamera());
+      const intersects = this.raycaster.intersectObject(this.objectSelected, true);
+      if (intersects.length > 0) {
+        this.objectSelectedClicked = true;
+      }
+    }
+
   }
 
-  onMouseMove(event) {
+  onMouseMove(event,rect) {
     this.isClick = false;
     const e = this.getNormalizedEvent(event);
    
@@ -919,25 +1068,43 @@ class MyScene extends THREE.Scene {
       const touch = e;
       const deltaX = touch.clientX - this.previousTouchX;
       const deltaY = touch.clientY - this.previousTouchY;
+      const centerX = window.innerWidth / 2;
+      const deltaCenterX = (touch.clientX - centerX) / centerX;
 
       // Mover la cámara en respuesta al desplazamiento del dedo
       // this.camera.position.z -= deltaY * 0.5; // Ajustar sensibilidad de rotación horizontal
       // this.camera.position.x -= deltaX * 0.5; // Ajustar sensibilidad de rotación vertical
 
       // Mover la cámara en respuesta al desplazamiento del dedo
+      if(this.objectSelected == null){
+        this.POVCamera.position.z -= deltaY * 0.02; // Ajustar sensibilidad de rotación horizontal
+        this.POVCamera.position.x -= deltaX * 0.02;
+      }
 
-      this.POVCamera.position.z -= deltaY * 0.02; // Ajustar sensibilidad de rotación horizontal
-      this.POVCamera.position.x -= deltaX * 0.02; // Ajustar sensibilidad de rotación vertical
+      if(this.translationMode && this.objectSelectedClicked){
+        this.POVCamera.position.z += deltaY * 0.02; // Ajustar sensibilidad de rotación horizontal
+        this.POVCamera.position.x += deltaX * 0.02; // Ajustar sensibilidad de rotación vertical
 
-      if (this.objectSelected != null) {
-        this.objectSelected.position.z -= deltaY * 0.02;
-        this.objectSelected.position.x -= deltaX * 0.02;
-        this.xInput.value = this.objectSelected.position.x;
-        this.zInput.value = this.objectSelected.position.z;
+        if (this.objectSelected != null) {
+          this.objectSelected.position.z += deltaY * 0.02;
+          this.objectSelected.position.x += deltaX * 0.02;
+          this.xInput.value = this.objectSelected.position.x;
+          this.zInput.value = this.objectSelected.position.z;
+        }
+
+        
+      }else{
+        if (this.objectSelected != null && this.objectSelectedClicked) {
+          this.rotateObjectSelected(deltaCenterX*180);
+          // this.objectSelected.position.z -= deltaY * 0.02;
+          // this.objectSelected.position.x -= deltaX * 0.02;
+          // this.xInput.value = this.objectSelected.position.x;
+          // this.zInput.value = this.objectSelected.position.z;
+        }
       }
 
       if(!this.checkCameraColission()){
-        this.cenitalPointer.material.color.set(0x00ff00);
+          this.cenitalPointer.material.color.set(0x00ff00);
       }else{
         this.cenitalPointer.material.color.set(0xff0000);
       }
@@ -963,15 +1130,86 @@ class MyScene extends THREE.Scene {
       this.previousTouchY = touch.clientY;
 
 
+    }else if(!this.isDragging ){
+      var mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+      this.raycaster.setFromCamera(mouse,this.getCamera());
+      if(this.objectSelected != null)  {
+        const intersects = this.raycaster.intersectObject(this.objectSelected, true);
+        if (intersects.length > 0) {
+          if(this.translationMode){
+            this.renderer.domElement.style.cursor = 'move';
+          }else{
+            this.renderer.domElement.style.cursor = 'ew-resize';
+          }
+          // Aquí puedes hacer lo que necesites, cambiar cursor, activar modo rotación, etc.
+        } else {
+          // Ratón fuera del objeto
+          this.renderer.domElement.style.cursor = 'default';
+        }
+      }else{
+        const intersects = this.raycaster.intersectObjects(this.pickableObjects, true);
+        if(intersects.length>0){
+          this.renderer.domElement.style.cursor = 'pointer';
+          //hacer que se muestre el objeto como seleccioando
+          var selectedObject = intersects[0].object;
+
+          // Subir en la jerarquía hasta encontrar el objeto padre que sea un Object3D
+          while (selectedObject.parent && !(selectedObject.parent instanceof THREE.Scene)) {
+            selectedObject = selectedObject.parent;
+          }
+
+          if (selectedObject.isObject3D) {
+            if(this.objectHovered != null &&this.objectHovered != selectedObject){
+              this.objectHovered.objectSelected(this);
+              this.objectHovered  =null;
+              this.objectHovered = selectedObject;
+              this.objectHovered.selectObject(this);
+            }
+            if(this.objectHovered == null){
+              this.objectHovered = selectedObject;
+              this.objectHovered.selectObject(this);
+            }
+          
+          
+            
+          }
+
+        }else{
+          this.renderer.domElement.style.cursor = 'default';
+          if(this.objectHovered != null){
+            this.objectHovered.selectObject(this);
+            this.objectHovered = null;
+          }
+
+        }
+
+      }
     }
   }
 
   onMouseEnd(event,rect) {
     
     this.isDragging = false;
-
+    this.objectSelectedClicked = false;
+    const e = this.getNormalizedEvent(event);
     if (event.type.startsWith('touch') && this.isClick) {
       this.pick(event,rect)
+    }
+    var mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    this.raycaster.setFromCamera(mouse,this.getCamera());
+    if(this.objectSelected != null)  {
+      const intersects = this.raycaster.intersectObject(this.objectSelected, true);
+      if (intersects.length > 0) {
+        if(this.translationMode){
+          this.renderer.domElement.style.cursor = 'move';
+        }else{
+          this.renderer.domElement.style.cursor = 'ew-resize';
+        }
+        // Aquí puedes hacer lo que necesites, cambiar cursor, activar modo rotación, etc.
+      } else {
+        // Ratón fuera del objeto
+        this.renderer.domElement.style.cursor = 'default';
+      }
     }
     
   }
@@ -1013,8 +1251,14 @@ $(function () {
   });
 
   // window.addEventListener('joystickMove',(event)=>{scene.moveJoystick(event)});
-  sceneDiv.addEventListener('mousedown', (event) => { scene.onMouseStart(event) });
-  sceneDiv.addEventListener('mousemove', (event) => { scene.onMouseMove(event) });
+  sceneDiv.addEventListener('mousedown', (event) => { 
+    const rect = sceneDiv.getBoundingClientRect();
+    scene.onMouseStart(event,rect);
+   });
+  sceneDiv.addEventListener('mousemove', (event) => {
+    const rect = sceneDiv.getBoundingClientRect();
+     scene.onMouseMove(event,rect)
+     });
   
   sceneDiv.addEventListener('mouseup', (event) => {
     const rect = sceneDiv.getBoundingClientRect();
@@ -1024,11 +1268,13 @@ $(function () {
 
   sceneDiv.addEventListener('touchstart', (event) => {
     event.preventDefault(); 
-    scene.onMouseStart(event) 
+    const rect = sceneDiv.getBoundingClientRect();
+    scene.onMouseStart(event,rect) ;
   },{passive:false});
   sceneDiv.addEventListener('touchmove', (event) => {
     event.preventDefault();
-    scene.onMouseMove(event) 
+    const rect = sceneDiv.getBoundingClientRect();
+     scene.onMouseMove(event,rect)
   },{passive:false});
   sceneDiv.addEventListener('touchend', (event) => {
     event.preventDefault();

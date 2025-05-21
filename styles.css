@@ -204,6 +204,21 @@
     height: auto;
     border-radius: 15px;
 }
+#screenshot-btn {
+    position: fixed;
+    top: 10rem;
+    right: 1rem;
+    padding: 10px;
+    background-color: rgb(255, 255, 255,0.6); /* Color de fondo */
+    color: black;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 150px; /* Limita el tamaño máximo del botón */
+    height: auto;
+    border-radius: 15px;
+}
 .circle {
     position: absolute;
     top: 50%;
@@ -216,15 +231,109 @@
 
   }
 
-/* .proceduralBuilding {
+  #modal {
     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+  }
+  
+  #overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
+    z-index: 0;
+  }
+
+.proceduralBuilding {
+    position: fixed;
+    z-index: 1;
     top: 50%;
     left: 50%; 
     transform: translate(-50%, -50%);
-    background-color: green;
-    height: 50%;
-    width: 50%;
-} */
+    background-color: rgb(0, 150, 136);
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    color: white;
+}
+
+select {
+    padding: 0.5rem;
+    font-size: 1rem;
+
+}
+.proceduralBuilding select {
+    width: 50rem;
+}
+.proceduralBuilding div {
+    width: 100%; /* o 100% para usar todo el ancho del contenedor */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-group {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .button-group button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  #saveBtn {
+    background-color: #c6e7c7;
+    color: rgb(0, 0, 0);
+  }
+  
+  .cancelBtn {
+    background-color: #f44336;
+    color: white;
+  }
+/* Contenedor principal del select visible */
+.select2-container--default .select2-selection--single {
+  height: 70px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 10px; /* espacio lateral opcional */
+}
+
+/* Contenido renderizado dentro del select (imagen + texto) */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  display: flex !important;
+  align-items: center !important;
+  line-height: normal !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+/* Flecha del desplegable */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 70px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+  
 
 #x {
     width: 30%
