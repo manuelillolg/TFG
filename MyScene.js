@@ -160,7 +160,7 @@ class MyScene extends THREE.Scene {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = `
           <p>Planta ${i}</p>
-          <select id="dropdown${i} style="width: 200px !important;">
+          <select id="dropdown${i}">
             ${wallOptions}
           </select>
         `;
@@ -467,6 +467,36 @@ class MyScene extends THREE.Scene {
         this.POVButton.textContent = "TOP";
         this.joystickContainer.style.display = "block";
         this.POVCamera.userData.camera.position.y = POV_HEIGHT;
+        this.camera.rotation.x += Math.PI/2;
+
+        if(this.pickableObjects.length != 0){
+          const target = new THREE.Vector3(
+  this.pickableObjects[0].position.x,
+  0,
+  this.pickableObjects[0].position.z
+);
+
+const position = this.POVCamera.position.clone();
+
+// Dirección hacia el objetivo en el plano XZ
+const dirToTarget = new THREE.Vector3().subVectors(target, position);
+dirToTarget.y = 0;
+dirToTarget.normalize();
+
+// Dirección actual del objeto según su rotación Y
+const currentY = this.POVCamera.rotation.y;
+const currentForward = new THREE.Vector3(-Math.sin(currentY), 0, -Math.cos(currentY));
+
+// Ángulos
+const angleToTarget = Math.atan2(dirToTarget.x, dirToTarget.z);
+const angleCurrent = Math.atan2(currentForward.x, currentForward.z);
+
+// Diferencia angular
+const angleDelta = angleToTarget - angleCurrent;
+
+// Aplicar rotación relativa
+this.POVCamera.rotation.y += angleDelta;
+        }
         console.log(this.POVCamera)
         this.screenshotButton.style.display = "block";
         //this.POVCamera.userData.camera.lookAt(0,0,this.POVCamera.position.z -190)
@@ -1148,7 +1178,7 @@ class MyScene extends THREE.Scene {
         }
       }else{
         const intersects = this.raycaster.intersectObjects(this.pickableObjects, true);
-        if(intersects.length>0){
+        if(intersects.length>0 && !this.POV){
           this.renderer.domElement.style.cursor = 'pointer';
           //hacer que se muestre el objeto como seleccioando
           var selectedObject = intersects[0].object;
