@@ -471,31 +471,31 @@ class MyScene extends THREE.Scene {
 
         if(this.pickableObjects.length != 0){
           const target = new THREE.Vector3(
-  this.pickableObjects[0].position.x,
-  0,
-  this.pickableObjects[0].position.z
-);
+            this.pickableObjects[this.pickableObjects.length -1].position.x,
+            0,
+            this.pickableObjects[this.pickableObjects.length -1].position.z
+          );
 
-const position = this.POVCamera.position.clone();
+          const position = this.POVCamera.position.clone();
 
-// Dirección hacia el objetivo en el plano XZ
-const dirToTarget = new THREE.Vector3().subVectors(target, position);
-dirToTarget.y = 0;
-dirToTarget.normalize();
+          // Dirección hacia el objetivo en el plano XZ
+          const dirToTarget = new THREE.Vector3().subVectors(target, position);
+          dirToTarget.y = 0;
+          dirToTarget.normalize();
 
-// Dirección actual del objeto según su rotación Y
-const currentY = this.POVCamera.rotation.y;
-const currentForward = new THREE.Vector3(-Math.sin(currentY), 0, -Math.cos(currentY));
+          // Dirección actual del objeto según su rotación Y
+          const currentY = this.POVCamera.rotation.y;
+          const currentForward = new THREE.Vector3(-Math.sin(currentY), 0, -Math.cos(currentY));
 
-// Ángulos
-const angleToTarget = Math.atan2(dirToTarget.x, dirToTarget.z);
-const angleCurrent = Math.atan2(currentForward.x, currentForward.z);
+          // Ángulos
+          const angleToTarget = Math.atan2(dirToTarget.x, dirToTarget.z);
+          const angleCurrent = Math.atan2(currentForward.x, currentForward.z);
 
-// Diferencia angular
-const angleDelta = angleToTarget - angleCurrent;
+          // Diferencia angular
+          const angleDelta = angleToTarget - angleCurrent;
 
-// Aplicar rotación relativa
-this.POVCamera.rotation.y += angleDelta;
+          // Aplicar rotación relativa
+          this.POVCamera.rotation.y += angleDelta;
         }
         console.log(this.POVCamera)
         this.screenshotButton.style.display = "block";
