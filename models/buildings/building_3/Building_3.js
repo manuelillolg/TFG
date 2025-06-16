@@ -6,8 +6,6 @@ class Building_3 extends THREE.Object3D {
   constructor() {
     super();
 
-    //Edificio de 40 unidades de alto y 10 de ancho
-
     const buildingGeometry = new THREE.BoxGeometry( 16, 30, 16); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
@@ -29,7 +27,7 @@ class Building_3 extends THREE.Object3D {
 
     const geometry = new THREE.BoxGeometry(15.9, 30, 15.9);
     geometry.computeBoundingBox()
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5 }); // Material sólido
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5 }); 
     this.visibleBBox = new THREE.Mesh(geometry, material);
 
     this.visibleBBox.geometry.userData.obb = new OBB().fromBox3(

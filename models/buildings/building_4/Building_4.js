@@ -39,7 +39,7 @@ class Building_4 extends THREE.Object3D {
 
     const geometry = new THREE.BoxGeometry(x - 0.1, y, z - 0.1);
     geometry.computeBoundingBox()
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5 }); // Material sólido
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5 }); 
     this.visibleBBox = new THREE.Mesh(geometry, material);
 
     this.visibleBBox.geometry.userData.obb = new OBB().fromBox3(
@@ -88,7 +88,7 @@ class Building_4 extends THREE.Object3D {
         // balcón trasero
         for(let i = 0; i < this.width/6; i++){
           const backBalcony = balcony.clone();
-          backBalcony.rotation.y = Math.PI; // rotada 180 grados sobre el eje Y
+          backBalcony.rotation.y = Math.PI; 
           backBalcony.position.set( -this.width/2 + (this.width/(this.width/6))/2 +6*i, 2.8/ 2 + 0.1 + 0.1 + this.level * 3, -this.depth / 2 - 0.01);
           this.add(backBalcony);
         }
@@ -97,7 +97,7 @@ class Building_4 extends THREE.Object3D {
         // Ventana izquierda
         for(let i = 0; i < this.depth/6; i++){
           const leftBalcony = balcony.clone();
-          leftBalcony.rotation.y = -Math.PI / 2; // 90 grados
+          leftBalcony.rotation.y = -Math.PI / 2; 
           leftBalcony.position.set(-this.width / 2 - 0.01, 2.8/ 2 + 0.1 + 0.1 + this.level * 3, -this.depth/2 + (this.depth/(this.depth/6))/2 +6*i);
           this.add(leftBalcony);
         }
@@ -105,7 +105,7 @@ class Building_4 extends THREE.Object3D {
         // Ventana derecha
         for(let i = 0; i < this.depth/6 ;i++){
           const rightBalcony = balcony.clone();
-          rightBalcony.rotation.y = Math.PI / 2; // -90 grados
+          rightBalcony.rotation.y = Math.PI / 2; 
           rightBalcony.position.set(+this.width / 2 + 0.01, 2.8/ 2 + 0.1 + 0.1 + this.level * 3, -this.depth/2 + (this.depth/(this.depth/6))/2 +6*i);
           this.add(rightBalcony);
         }
@@ -130,7 +130,7 @@ class Building_4 extends THREE.Object3D {
         // Ventana trasera
         for(let i = 0; i < this.width/6; i++){
           const backWindow = window.clone();
-          backWindow.rotation.y = Math.PI; // rotada 180 grados sobre el eje Y
+          backWindow.rotation.y = Math.PI; 
           backWindow.position.set( -this.width/2 + (this.width/(this.width/6))/2 +6*i, 1.5/ 2 + 0.1 + 1.5/2 + this.level * 3, -this.depth / 2 - 0.01);
           this.add(backWindow);
         }
@@ -139,7 +139,7 @@ class Building_4 extends THREE.Object3D {
         // Ventana izquierda
         for(let i = 0; i < this.depth/6; i++){
           const leftWindow = window.clone();
-          leftWindow.rotation.y = -Math.PI / 2; // 90 grados
+          leftWindow.rotation.y = -Math.PI / 2; 
           leftWindow.position.set(-this.width / 2 - 0.01, 1.5/ 2 + 0.1 + 1.5/2 + this.level * 3, -this.depth/2 + (this.depth/(this.depth/6))/2 +6*i);
           this.add(leftWindow);
         }
@@ -147,7 +147,7 @@ class Building_4 extends THREE.Object3D {
         // Ventana derecha
         for(let i = 0; i < this.depth/6 ;i++){
           const rightWindow = window.clone();
-          rightWindow.rotation.y = Math.PI / 2; // -90 grados
+          rightWindow.rotation.y = Math.PI / 2; 
           rightWindow.position.set(+this.width / 2 + 0.01, 1.5/ 2 + 0.1 + 1.5/2 + this.level * 3, -this.depth/2 + (this.depth/(this.depth/6))/2 +6*i);
           this.add(rightWindow);
         }

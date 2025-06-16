@@ -113,13 +113,13 @@ function toggleDropdown(menuId, category) {
                   option.classList.add('w3-bar-item', 'w3-button');
                   // Crear un elemento <img> para la imagen
                   const img = document.createElement('img');
-                  img.src = `./previews/${category}/${subdir}.png`;  // Aquí cambias la ruta según tu lógica para las imágenes
-                  img.alt = subdir; // Texto alternativo para la imagen (útil por accesibilidad)
-                  img.style.width = '30%';  // Ajusta el tamaño de la imagen
-                  img.style.height = 'auto'; // Ajusta el tamaño de la imagen
+                  img.src = `./previews/${category}/${subdir}.png`;  
+                  img.alt = subdir; 
+                  img.style.width = '30%';  
+                  img.style.height = 'auto'; 
 
-// Añadir la imagen al enlace
-option.appendChild(img);
+                  // Añadir la imagen al enlace
+                  option.appendChild(img);
 
                   // Establecer un manejador de clics para abrir una nueva ventana con la ruta
                   option.onclick = () => {
@@ -127,20 +127,6 @@ option.appendChild(img);
                     window.open(url, 'popupWindow', 'width=800,height=600,scrollbars=yes,resizable=yes'); // Abre en una ventana emergente
                   };
 
-                  // Crear un botón "+"
-                  // const plusButton = document.createElement('button');
-                  // plusButton.textContent = "+";
-                  // plusButton.style.marginLeft = '10px'; // Añadir un poco de espacio entre el texto y el botón
-                  // plusButton.onclick = (e) => {
-                  //     e.stopPropagation(); // Evitar que el click en el botón dispare el click del enlace
-                  //     addObject(subdir); // Invocar la función addObject
-                  //     closeSidebar();
-                  //     document.getElementById("POV").style.display="none";
-                  // };
-
-                  // // Añadir el botón "+" al final del enlace
-                  // option.appendChild(plusButton);
-                  // Hacer que el enlace sea draggable
                   option.setAttribute('draggable', 'true');
                   option.dataset.model = subdir;
 

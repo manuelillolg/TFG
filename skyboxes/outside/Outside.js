@@ -5,8 +5,6 @@ class Outside extends THREE.Object3D {
   constructor() {
     super();
 
-    //Edificio de 40 unidades de alto y 10 de ancho
-
     const buildingGeometry = new THREE.BoxGeometry( 9000, 3, 9000); 
     // Cargar la textura
     const textureLoader = new THREE.TextureLoader();
@@ -43,31 +41,7 @@ class Outside extends THREE.Object3D {
     //this.update();
   }
   
-//   getBBoxPosition(){
-    
-//     return this.bbox.min.x
-//   }
 
-//   selectObject(){
-//     if(!this.objectSelected){
-//       this.objectSelected = true;
-//       this.add(this.bboxHelper);
-//       this.add(this.visibleBBox)
-//     }else{
-//       this.objectSelected = false;
-//       this.unselectObject();
-//     }
-//   }
-
-//   unselectObject(){
-//     this.remove(this.bboxHelper);
-//     this.remove(this.visibleBBox)
-//   }
-  
-//   update() {
-//     this.visibleBBox.userData.obb.copy(this.visibleBBox.geometry.userData.obb)
-//     this.visibleBBox.userData.obb.applyMatrix4(this.visibleBBox.matrixWorld)
-// }
 }
 
 export { Outside }

@@ -15,33 +15,9 @@ class Car_1 extends THREE.Object3D {
     this.repetitions = 1; 
     this.loop = false
 
-    //Edificio de 40 unidades de alto y 10 de ancho
-
-    // const buildingGeometry = new THREE.BoxGeometry( 400, 250, 1000); 
-    // // Cargar la textura
-    // const textureLoader = new THREE.TextureLoader();
-    // const alzado = textureLoader.load('./imgs/alzado.jpg');
-    // const perfil = textureLoader.load('./imgs/perfil.jpg');
-    // perfil.wrapS = THREE.RepeatWrapping;
-    // perfil.wrapT = THREE.RepeatWrapping;
-
-    // perfil.repeat.set(2,1)
-
-    // // Crear materiales para cada cara
-    // const buildingMaterial = [
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral izquierda
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Lateral derecha
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte superior
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }), // Parte inferior
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa }),    // Frente con textura
-    //   new THREE.MeshBasicMaterial({ color: 0xaaaaaa })  // Parte trasera
-    // ];
-    // const cube = new THREE.Mesh( buildingGeometry, buildingMaterial );
-
-
     const geometry = new THREE.BoxGeometry(1.95, 1.30, 4.45);
     geometry.computeBoundingBox()
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5}); // Material sólido
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, transparent: true, opacity: 0.5}); 
     this.visibleBBox = new THREE.Mesh(geometry, material);
 
     this.visibleBBox.geometry.userData.obb = new OBB().fromBox3(
@@ -58,13 +34,11 @@ class Car_1 extends THREE.Object3D {
     this.name = 'car_1'
     this.objectSelected = false;
 
-    // cube.position.set(0,250/2+1.1,0);
-    // this.add(cube); 
     this.update();
     this.cargarModelo();
   }
   cargarModelo() {
-    const ruta = './obj/'; // por ejemplo: 'assets/models/coche/'
+    const ruta = './obj/'; 
 
     const mtlLoader = new MTLLoader();
     mtlLoader.setPath(ruta);
@@ -76,8 +50,8 @@ class Car_1 extends THREE.Object3D {
       objLoader.setPath(ruta);
       objLoader.load('Porsche_911_GT2.obj', (obj) => {
         obj.position.set(0,0.12+0.65,0);
-        //obj.scale.set(2, 2, 2); // Doble de tamaño en todos los ejes
-        this.obj = obj; // 🔹 lo guardas como propiedad de la clase
+      
+        this.obj = obj; 
         this.add(this.obj)
         
         obj.traverse((child) => {
@@ -179,11 +153,11 @@ class Car_1 extends THREE.Object3D {
     // Colocar el coche directamente
     this.position.copy(localPos);
     this.quaternion.copy(localQuat);
-    this.update(); // Para actualiza
+    this.update(); 
     this.add(this.bboxHelper);
     this.add(this.visibleBBox)
-    this.visibleBBox.visible = false;  // Se actualiza pero no se ve
-    this.bboxHelper.visible = false;   // Se actualiza pero no se ve
+    this.visibleBBox.visible = false;  
+    this.bboxHelper.visible = false;   
       
     const stepDuration = this.duration / (this.frames.length - 1);
     const object = this;
@@ -212,7 +186,7 @@ class Car_1 extends THREE.Object3D {
         .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, stepDuration)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onUpdate(() => {
-          object.update(); // Aquí sí se actualizará el OBB en cada paso de la interpolación de posición
+          object.update(); 
           if (object.checkCollision(pickableObjects)) {
             console.warn("Colisión detectada");
             stopRequested = true;
@@ -306,7 +280,6 @@ class Car_1 extends THREE.Object3D {
     this.updateMatrixWorld(true);
     this.visibleBBox.userData.obb.copy(this.visibleBBox.geometry.userData.obb)
     this.visibleBBox.userData.obb.applyMatrix4(this.visibleBBox.matrixWorld)
-    // Actualizar el Box3 que usa el helper
  
   }
 

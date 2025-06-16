@@ -3,7 +3,6 @@
 <html>
 
 <style>
-    /* Estilos CSS aquí */
     #WebGL-output {
         
         z-index: 1;
@@ -40,8 +39,6 @@
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left front" style="display:none" id="mySidebar">
     <button class="w3-bar-item w3-button w3-large" id="closeNav"
     >Close &times;</button>
-
-    <!-- Menú desplegable-->
      <div id="menuCategories"></div>
   </div>
   
@@ -122,7 +119,6 @@
         <div id ="step2" style="display: none;">
           <div id="dropdownContainer"></div>
 
-          <!-- Botones -->
           <div class="button-group">
             <button id="saveBtn">Guardar</button>
             <button id="cancelBtn2" class="cancelBtn">Cancelar</button>
@@ -153,29 +149,6 @@
         minimumResultsForSearch: -1
       });
     </script>
-    <!-- <script>
-      const dropdowns = [
-        document.getElementById("dropdown1"),
-        document.getElementById("dropdown2"),
-        document.getElementById("dropdown3"),
-        document.getElementById("dropdown4")
-      ];
-    
-      dropdowns.forEach((dropdown, index) => {
-        dropdown.addEventListener("change", () => {
-          // Siempre desactiva y resetea los siguientes
-          for (let i = index + 1; i < dropdowns.length; i++) {
-            dropdowns[i].value = "-";
-            dropdowns[i].disabled = true;
-          }
-    
-          // Si no es "-", habilita el siguiente
-          if (dropdown.value !== "-" && index + 1 < dropdowns.length) {
-            dropdowns[index + 1].disabled = false;
-          }
-        });
-      });
-    </script> -->
  
     <div>
         <button class = "zone" id="POV">POV</button>

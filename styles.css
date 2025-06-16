@@ -17,28 +17,28 @@
 #joystick-container {
     width: 150px;
     height: 150px;
-    position: fixed; /* Cambiado a 'fixed' para posicionar relativo a la ventana */
-    bottom: 10%; /* Ajusta la distancia desde el borde inferior */
+    position: fixed; 
+    bottom: 10%; 
     right: 10%;
     border-radius: 50%;
     border: 2px solid black;
-    touch-action: none; /* Importante para prevenir comportamiento táctil predeterminado */
+    touch-action: none; 
 }
 
 .w3-container {
     
     width: 100%;
     display: flex;
-    justify-content: flex-start; /* Centra horizontalmente */
+    justify-content: flex-start; 
     align-items: center;
     box-sizing: border-box;
     flex-direction: column;
-    /* Hace que los hijos igualen la altura del más alto */
+ 
 
 }
 
 .zone {
-    flex: 1; /* Cada zona ocupa un tercio del espacio total */
+    flex: 1; 
     padding: 10px;
 }
 
@@ -53,14 +53,14 @@
     transform: translate(-50%, -50%);
 }
 
-/* Ajustes de la toolbar */
+
 .toolbar {
-    /* position: fixed; */
+ 
     width :100%;
     display: flex;
-    flex-direction: row; /* Mantiene la disposición vertical */
-    gap: 1rem; /* Espacio entre los elementos dentro de toolbar */
-    height: auto;           /* ✨ Asegura que crece con el contenido */
+    flex-direction: row; 
+    gap: 1rem; 
+    height: auto;          
     align-items: center;
 
   
@@ -68,13 +68,13 @@
 
 .toolbarAnimation {
     position: fixed;
-    left: 0; /* Lo pone a la izquierda de la pantalla */
-    top: 0;  /* Puedes ajustar este valor si quieres que no esté pegado al borde superior */
+    left: 0; 
+    top: 0;  
     
     display: flex;
-    flex-direction: row; /* Mantiene la disposición horizontal */
-    gap: 1rem; /* Espacio entre los elementos dentro de la toolbar */
-    height: auto; /* ✨ Asegura que crece con el contenido */
+    flex-direction: row; 
+    gap: 1rem; 
+    height: auto; 
     align-items: center;
     margin-top: 5rem;
     margin-left: 1.5rem;
@@ -82,7 +82,7 @@
 
 #rotationSliderContainer {
     display: flex;
-    flex-direction: column;  /* Deja el label encima del slider */
+    flex-direction: column;  
     gap: 2rem;
     padding: 2px ;
     width: 100%;
@@ -91,8 +91,8 @@
 .slidecontainer {
     position:fixed;
     display: flex;
-    flex-direction: column;  /* Mantiene el label sobre el slider */
-    gap: 0.5rem;  /* Espacio entre el label y el slider */
+    flex-direction: column;  
+    gap: 0.5rem;  
     width: 100%;
     margin-top: 5rem;
     padding: 10px;
@@ -100,9 +100,9 @@
 
 .coordinates {
     position: fixed;
-    top: 1rem;              /* Distancia desde la parte superior */
-    left: 50%;              /* Posición desde la izquierda */
-    transform: translateX(-50%); /* Centra horizontalmente */
+    top: 1rem;              
+    left: 50%;              
+    transform: translateX(-50%); 
     
     display: flex;
     flex-direction: row;
@@ -118,8 +118,8 @@
     background-color: rgba(255, 255, 255, 0.3);
     display: flex;
     justify-content:center ;
-    flex-direction: column;  /* Mantiene el label sobre el slider */
-    gap: 0.5rem;  /* Espacio entre el label y el slider */
+    flex-direction: column;  
+    gap: 0.5rem;  
     margin-top: 0rem;
     padding: 10px;
     height:100%;
@@ -132,19 +132,19 @@
     align-items: center;
 }
 
-/* Estilo para el slider */
+
 .slider {
-    width: 100%; /* Hace que el slider ocupe todo el ancho disponible */
-    max-width: 300px; /* Limita el tamaño máximo para evitar que se estire demasiado */
+    width: 100%; 
+    max-width: 300px; 
 }
 
-/* Estilo para el botón delete */
+
 #delete {
     position: fixed;
     top: 1rem;
     right: 1rem;
     
-    margin-top: 0; /* Ya no necesitas margin-top porque usamos top */
+    margin-top: 0; 
     margin-left: auto;
     padding: 10px;
     background-color: #f44336;
@@ -155,36 +155,31 @@
     width: 100%;
     max-width: 150px;
     border-radius: 15px;
-    height: auto; /* Ajusta la altura automáticamente */
-    /* z-index: 1000; Opcional: para asegurarte de que esté por encima de otros elementos */
+    height: auto;
   }
   
 #copy {
-    /* margin-left: auto; */
     padding: 10px;
-    background-color: rgb(255, 255, 255,0.6)
-    ; /* Color de fondo */
+    background-color: rgb(255, 255, 255,0.6);
     color: rgb(0, 0, 0);
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    max-width: 150px; /* Limita el tamaño máximo del botón */
+    max-width: 150px; 
     height: 70%;
     border-radius: 15px;
 }
 
 #removeFrames {
-    /* margin-left: auto; */
     padding: 10px;
-    background-color: #f44336
-    ; /* Color de fondo */
+    background-color: #f44336; 
     color: white;
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    max-width: 150px; /* Limita el tamaño máximo del botón */
+    max-width: 150px; 
     height: 70%;
     border-radius: 15px;
 }
@@ -194,13 +189,13 @@
     top: 5rem;
     right: 1rem;
     padding: 10px;
-    background-color: rgb(255, 255, 255,0.6); /* Color de fondo */
+    background-color: rgb(255, 255, 255,0.6); 
     color: black;
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    max-width: 150px; /* Limita el tamaño máximo del botón */
+    max-width: 150px; 
     height: auto;
     border-radius: 15px;
 }
@@ -209,13 +204,13 @@
     top: 10rem;
     right: 1rem;
     padding: 10px;
-    background-color: rgb(255, 255, 255,0.6); /* Color de fondo */
+    background-color: rgb(255, 255, 255,0.6);
     color: black;
     border: none;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    max-width: 150px; /* Limita el tamaño máximo del botón */
+    max-width: 150px; 
     height: auto;
     border-radius: 15px;
 }
@@ -244,7 +239,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
+    background: rgba(0, 0, 0, 0.5); 
     z-index: 0;
   }
 
@@ -278,7 +273,7 @@ select {
     width: 50rem;
 }
 .proceduralBuilding div {
-    width: 100%; /* o 100% para usar todo el ancho del contenedor */
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -309,15 +304,15 @@ select {
     background-color: #f44336;
     color: white;
   }
-/* Contenedor principal del select visible */
+
 .select2-container--default .select2-selection--single {
   height: 70px !important;
   display: flex !important;
   align-items: center !important;
-  padding: 0 10px; /* espacio lateral opcional */
+  padding: 0 10px; 
 }
 
-/* Contenido renderizado dentro del select (imagen + texto) */
+
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   display: flex !important;
   align-items: center !important;
@@ -326,7 +321,7 @@ select {
   padding: 0 !important;
 }
 
-/* Flecha del desplegable */
+
 .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 70px !important;
   display: flex !important;

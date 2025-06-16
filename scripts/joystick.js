@@ -37,10 +37,6 @@ function moveJoystick(event) {
         joystick.style.top = `${centerY + Math.sin(angle) * maxDistance}px`;
     }
 
-    // Mostrar coordenadas normalizadas
-    // coordinateX.value = `${(deltaX / maxDistance).toFixed(2)}`
-    // coordinateZ.value = `${(deltaY / maxDistance).toFixed(2)}`;
-
     moveEvent.detail.coordinateX =( deltaX / maxDistance).toFixed(2)
     moveEvent.detail.coordinateZ = (deltaY / maxDistance).toFixed(2)
     window.dispatchEvent(
@@ -49,12 +45,12 @@ function moveJoystick(event) {
 }
 
 function startDrag() {
-    isDragging = true; // Activar el modo de arrastre
+    isDragging = true; 
 }
 
 function stopDrag() {
-    isDragging = false; // Desactivar el modo de arrastre
-    resetJoystick(); // Opcional: resetear la posición del joystick al centro
+    isDragging = false; 
+    resetJoystick(); 
 }
 
 function resetJoystick() {
